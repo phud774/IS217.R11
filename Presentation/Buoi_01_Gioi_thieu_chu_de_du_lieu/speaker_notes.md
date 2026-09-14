@@ -57,25 +57,19 @@ Dữ liệu do Iowa Department of Revenue công bố và sử dụng giấy phé
 
 *[Chuyển sang slide 5]*
 
-## Slide 5 – Một bản ghi có dạng như thế nào?
+## Slide 5 – Một hàng dữ liệu có dạng như thế nào?
 
-Hai mươi ba thuộc tính của dữ liệu có thể chia thành năm nhóm.
+Để hiểu rõ hơn về dữ liệu, nhóm lấy một hàng thực tế làm ví dụ.
 
-Nhóm giao dịch gồm mã dòng hóa đơn và ngày đặt hàng.
+Ngày 1 tháng 1 năm 2024, cửa hàng Keokuk Spirits tại thành phố Keokuk, thuộc Lee County, đặt mua sản phẩm Lunazul Reposado. Đây là sản phẩm thuộc danh mục 100% Agave Tequila và do Heaven Hill Brands cung cấp.
 
-Nhóm cửa hàng và địa lý gồm tên cửa hàng, địa chỉ, thành phố và quận.
+Cửa hàng đặt 12 chai, mỗi chai có dung tích 1.750 mililít. Tổng thể tích là 21 lít và tổng giá trị của dòng đặt hàng là 432 đô la.
 
-Nhóm sản phẩm gồm tên, danh mục, dung tích và quy cách đóng gói.
+Như vậy, mỗi hàng trong dữ liệu đại diện cho một sản phẩm cụ thể nằm trong đơn đặt hàng của một cửa hàng tại một ngày xác định. Nếu một đơn hàng có nhiều sản phẩm thì đơn hàng đó sẽ có nhiều hàng dữ liệu.
 
-Nhóm nhà cung cấp gồm mã và tên nhà cung cấp.
+Cần lưu ý đây là dữ liệu phân phối đến nhà bán lẻ, không phải hóa đơn bán trực tiếp cho người tiêu dùng cuối.
 
-Cuối cùng là nhóm định lượng, gồm số chai, tổng giá trị bằng đô la và thể tích theo lít hoặc gallon.
-
-Đơn vị của một bản ghi là một sản phẩm cụ thể trong đơn đặt hàng của một cửa hàng tại một ngày xác định. Một đơn hàng có thể có nhiều dòng nếu cửa hàng đặt nhiều sản phẩm.
-
-Cần lưu ý rằng `sales_bottles` là số chai cửa hàng đặt mua, còn `sales_dollars` là tổng giá trị của dòng đặt hàng. Đây không phải số lượng và doanh thu bán trực tiếp cho người tiêu dùng cuối.
-
-Tóm lại, chủ đề có nhiều chiều phân tích như thời gian, địa lý, cửa hàng, sản phẩm và nhà cung cấp. Dữ liệu cũng có quy mô và cấu trúc phù hợp để nhóm tiếp tục xây dựng SSIS, kho dữ liệu, SSAS và các báo cáo trực quan.
+Tóm lại, bộ dữ liệu cho biết cửa hàng nào đã đặt sản phẩm gì, tại đâu, vào thời điểm nào, với số lượng và tổng giá trị bao nhiêu. Đây sẽ là dữ liệu đầu vào để nhóm tiếp tục thực hiện các phần sau của đồ án.
 
 Phần trình bày của nhóm em đến đây là kết thúc. Cảm ơn thầy/cô và các bạn đã lắng nghe.
 

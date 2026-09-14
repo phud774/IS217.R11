@@ -192,49 +192,49 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{2. Một bản ghi có dạng như thế nào?}
+\begin{frame}{2. Một hàng dữ liệu có dạng như thế nào?}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.52\textwidth}
+    \begin{column}{0.53\textwidth}
+      \textbf{Ví dụ một hàng thực tế}
+      \vspace{0.12cm}
+
       \footnotesize
-      \renewcommand{\arraystretch}{1.10}
+      \renewcommand{\arraystretch}{1.08}
       \setlength{\tabcolsep}{4pt}
-      \begin{tabular}{>{\bfseries\color{Navy}}p{1.75cm} p{4.5cm}}
+      \begin{tabular}{>{\bfseries\color{Navy}}p{2.0cm} p{4.35cm}}
         \toprule
-        Nhóm thông tin & Ví dụ thuộc tính \\
+        Thuộc tính & Giá trị \\
         \midrule
-        Giao dịch & Mã dòng hóa đơn, ngày đặt hàng \\
-        Cửa hàng & Tên, địa chỉ, thành phố, quận \\
-        Sản phẩm & Danh mục, tên, dung tích, quy cách \\
-        Nhà cung cấp & Mã và tên nhà cung cấp \\
-        Định lượng & Số chai, USD, lít, gallon \\
+        Ngày đặt & 01/01/2024 \\
+        Cửa hàng & Keokuk Spirits · Keokuk · Lee County \\
+        Sản phẩm & Lunazul Reposado · 100\% Agave Tequila \\
+        Nhà cung cấp & Heaven Hill Brands \\
+        Số lượng & 12 chai $\times$ 1.750 ml \\
+        Giá trị & 432 USD · 21 lít \\
         \bottomrule
       \end{tabular}
     \end{column}
 
-    \begin{column}{0.44\textwidth}
-      \begin{beamercolorbox}[rounded=true,sep=.55em]{block body}
-        \textbf{Đơn vị của một bản ghi}\par
-        \vspace{0.08cm}
-        \footnotesize Một sản phẩm cụ thể trong đơn đặt hàng của một cửa hàng,
-        tại một ngày xác định.
-      \end{beamercolorbox}
+    \begin{column}{0.43\textwidth}
+      \textbf{Cách đọc hàng dữ liệu này}
+      \vspace{0.08cm}
 
-      \vspace{0.18cm}
+      \footnotesize
+      \begin{itemize}
+        \item Ngày 01/01/2024, Keokuk Spirits đặt mua Lunazul Reposado.
+        \item Sản phẩm thuộc nhóm 100\% Agave Tequila, do Heaven Hill Brands cung cấp.
+        \item 12 chai loại 1.750 ml = 21 lít, tổng giá trị 432 USD.
+      \end{itemize}
+
+      \vspace{0.12cm}
       \begin{beamercolorbox}[rounded=true,sep=.55em]{alertblock body}
-        \textbf{Lưu ý khi diễn giải}\par
-        \vspace{0.08cm}
-        \footnotesize Đây là dữ liệu \textbf{bán buôn/phân phối đến nhà bán lẻ},
-        không phải hóa đơn bán cho người tiêu dùng cuối.
+        \textbf{Mỗi hàng = một sản phẩm trong một đơn đặt hàng}\par
+        \vspace{0.06cm}
+        \scriptsize Đây là dữ liệu phân phối đến nhà bán lẻ, không phải hóa đơn
+        bán cho người tiêu dùng cuối.
       \end{beamercolorbox}
     \end{column}
   \end{columns}
-
-  \vspace{0.18cm}
-  \begin{beamercolorbox}[wd=\textwidth,rounded=true,sep=.5em,center]{block body}
-    \scriptsize \texttt{sales\_bottles} = số chai cửa hàng đặt mua
-    \quad·\quad
-    \texttt{sales\_dollars} = tổng giá trị dòng đặt hàng
-  \end{beamercolorbox}
 
   \source{Iowa Data Hub và Socrata API documentation for Iowa Liquor Sales.}
 \end{frame}
