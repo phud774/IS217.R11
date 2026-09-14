@@ -1,0 +1,242 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage{fontspec}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{hyperref}
+\usetikzlibrary{positioning}
+
+\setsansfont{Arial}
+\setmonofont{Consolas}
+
+\definecolor{Navy}{HTML}{17324D}
+\definecolor{Blue}{HTML}{2878B5}
+\definecolor{Amber}{HTML}{D98B2B}
+\definecolor{SoftBlue}{HTML}{EAF3F8}
+\definecolor{SoftAmber}{HTML}{FFF3E2}
+\definecolor{Ink}{HTML}{243746}
+\definecolor{Muted}{HTML}{657786}
+
+\setbeamercolor{normal text}{fg=Ink,bg=white}
+\setbeamercolor{frametitle}{fg=white,bg=Navy}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{subtitle}{fg=SoftBlue}
+\setbeamercolor{structure}{fg=Blue}
+\setbeamercolor{alerted text}{fg=Amber}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{title}{series=\bfseries,size=\LARGE}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\color{Amber}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{Blue}$\bullet$}
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.86\paperwidth,ht=2.7ex,dp=1.1ex,leftskip=1em]{author in head/foot}%
+      \color{Muted}\scriptsize IS217 · Iowa Liquor Sales 2024
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.14\paperwidth,ht=2.7ex,dp=1.1ex,center]{date in head/foot}%
+      \color{Navy}\scriptsize\insertframenumber/\inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+}
+
+\newcommand{\source}[1]{%
+  \par\vspace{0.12cm}
+  {\color{Muted}\tiny Nguồn: #1}
+}
+
+\newcommand{\metric}[2]{%
+  \begin{tikzpicture}
+    \node[rounded corners=5pt, fill=SoftBlue, minimum width=2.35cm,
+          minimum height=1.35cm, align=center, inner sep=6pt] {
+      {\color{Navy}\bfseries\Large #1}\\[-1pt]
+      {\color{Muted}\scriptsize #2}
+    };
+  \end{tikzpicture}%
+}
+
+\title{Phân tích hoạt động phân phối\\rượu mạnh tại bang Iowa}
+\subtitle{Lý do chọn chủ đề và tổng quan dữ liệu năm 2024}
+\author{Đồ án môn học IS217}
+\date{Buổi thuyết trình 01}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Navy] (current page.south west) rectangle (current page.north east);
+    \fill[Amber] (current page.south west) rectangle
+      ([xshift=.18cm]current page.north west);
+    \fill[Blue!35!Navy] ([xshift=10.6cm]current page.south west)
+      -- (current page.south east) -- (current page.north east)
+      -- ([xshift=13.4cm]current page.north west) -- cycle;
+  \end{tikzpicture}
+
+  \vspace{1.0cm}
+  {\color{Amber}\bfseries\large IS217 · BUỔI 01}\par
+  \vspace{0.55cm}
+  {\usebeamerfont{title}\color{white}\inserttitle\par}
+  \vspace{0.35cm}
+  {\color{SoftBlue}\large\insertsubtitle\par}
+  \vfill
+  {\color{white}\insertauthor\hfill\insertdate\par}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{1. Vì sao chọn chủ đề này?}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{Một thị trường có cơ chế phân phối đặc thù}
+      \vspace{0.08cm}
+      \begin{itemize}
+        \item Iowa quản lý tập trung hoạt động bán buôn \textit{spirits} (rượu mạnh).
+        \item Cơ quan của bang phân phối đến hơn \alert{2.000 nhà bán lẻ tư nhân}.
+        \item Các điểm bán Class E gồm siêu thị, cửa hàng rượu và cửa hàng tiện lợi.
+      \end{itemize}
+
+      \vspace{0.08cm}
+      \begin{beamercolorbox}[rounded=true,sep=0.55em]{block body}
+        \textbf{Ý nghĩa:} chủ đề phản ánh bài toán phân phối thực tế ở quy mô toàn bang,
+        không chỉ là bán hàng của một cửa hàng riêng lẻ.
+      \end{beamercolorbox}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=.38cm, every node/.style={font=\small}]
+        \node[draw=Blue, fill=SoftBlue, rounded corners, minimum width=4.7cm,
+              minimum height=.72cm] (supplier) {Nhà sản xuất / Nhà cung cấp};
+        \node[draw=Navy, fill=Navy, text=white, rounded corners,
+              minimum width=4.7cm, minimum height=.9cm, below=of supplier] (state)
+              {Bang Iowa · Nhà bán buôn trung tâm};
+        \node[draw=Amber, fill=SoftAmber, rounded corners, minimum width=4.7cm,
+              minimum height=.9cm, below=of state] (retailer)
+              {Nhà bán lẻ Class E};
+        \node[draw=Muted, fill=white, rounded corners, minimum width=4.7cm,
+              minimum height=.72cm, below=of retailer] (consumer) {Người tiêu dùng};
+
+        \draw[->,thick,Blue] (supplier) -- (state);
+        \draw[->,very thick,Amber] (state) -- node[right,text=Amber,font=\scriptsize\bfseries]
+          {phạm vi dữ liệu} (retailer);
+        \draw[->,thick,Muted] (retailer) -- (consumer);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+
+  \source{Iowa Department of Revenue, FY25 Annual Report và License Classifications.}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{1. Giá trị phân tích của chủ đề}
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \node[rounded corners=5pt, fill=SoftBlue, text width=5.7cm,
+          minimum height=1.55cm, align=left, inner sep=9pt] at (3.0,2.8) {
+      \textbf{\color{Navy}Xu hướng nhu cầu}\\
+      \small Nhu cầu nhập hàng thay đổi thế nào theo tháng và quý?
+    };
+    \node[rounded corners=5pt, fill=SoftAmber, text width=5.7cm,
+          minimum height=1.55cm, align=left, inner sep=9pt] at (9.5,2.8) {
+      \textbf{\color{Navy}Hiệu quả phân phối}\\
+      \small Cửa hàng và khu vực nào có sản lượng phân phối cao?
+    };
+    \node[rounded corners=5pt, fill=SoftAmber, text width=5.7cm,
+          minimum height=1.55cm, align=left, inner sep=9pt] at (3.0,.65) {
+      \textbf{\color{Navy}Sản phẩm \& nhà cung cấp}\\
+      \small Danh mục, sản phẩm và nhà cung cấp nào nổi bật?
+    };
+    \node[rounded corners=5pt, fill=SoftBlue, text width=5.7cm,
+          minimum height=1.55cm, align=left, inner sep=9pt] at (9.5,.65) {
+      \textbf{\color{Navy}Hỗ trợ quyết định}\\
+      \small Lập kế hoạch hàng hóa, tồn kho và phân bổ theo khu vực.
+    };
+  \end{tikzpicture}
+
+  \vspace{0.25cm}
+  \begin{beamercolorbox}[wd=.94\textwidth,rounded=true,sep=.75em,center]{block body}
+    \textbf{Mục tiêu:} biến dữ liệu đơn hàng thành thông tin hỗ trợ quản lý
+    hoạt động phân phối rượu mạnh tại Iowa.
+  \end{beamercolorbox}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{2. Dữ liệu Iowa Liquor Sales 2024}
+  \centering
+  \setlength{\tabcolsep}{2pt}
+  \begin{tabular}{ccccc}
+    \metric{2.590.975}{bản ghi} &
+    \metric{23}{thuộc tính} &
+    \metric{5}{tệp CSV} &
+    \metric{552 MB}{dung lượng} &
+    \metric{2024}{đủ 12 tháng}
+  \end{tabular}
+
+  \vspace{0.65cm}
+  \begin{beamercolorbox}[wd=.94\textwidth,rounded=true,sep=.9em]{block body}
+    \textbf{Dữ liệu ghi nhận gì?}\\[3pt]
+    Thông tin các nhà bán lẻ Class E tại Iowa \alert{đặt mua rượu mạnh},
+    theo từng sản phẩm và ngày mua, từ 01/01 đến 31/12/2024.
+  \end{beamercolorbox}
+
+  \vspace{0.35cm}
+  {\small
+    \textbf{Cơ quan công bố:} Iowa Department of Revenue · Alcohol \& Tax Operations Division
+    \hfill
+    \textbf{Giấy phép:} CC BY
+  }
+
+  \source{Iowa Data Hub: \href{https://data.iowa.gov/catalog/dataset/1261}{Iowa Liquor Sales, 2024}.}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{2. Một bản ghi có dạng như thế nào?}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.10}
+      \setlength{\tabcolsep}{4pt}
+      \begin{tabular}{>{\bfseries\color{Navy}}p{1.75cm} p{4.5cm}}
+        \toprule
+        Nhóm thông tin & Ví dụ thuộc tính \\
+        \midrule
+        Giao dịch & Mã dòng hóa đơn, ngày đặt hàng \\
+        Cửa hàng & Tên, địa chỉ, thành phố, quận \\
+        Sản phẩm & Danh mục, tên, dung tích, quy cách \\
+        Nhà cung cấp & Mã và tên nhà cung cấp \\
+        Định lượng & Số chai, USD, lít, gallon \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+
+    \begin{column}{0.44\textwidth}
+      \begin{beamercolorbox}[rounded=true,sep=.55em]{block body}
+        \textbf{Đơn vị của một bản ghi}\par
+        \vspace{0.08cm}
+        \footnotesize Một sản phẩm cụ thể trong đơn đặt hàng của một cửa hàng,
+        tại một ngày xác định.
+      \end{beamercolorbox}
+
+      \vspace{0.18cm}
+      \begin{beamercolorbox}[rounded=true,sep=.55em]{alertblock body}
+        \textbf{Lưu ý khi diễn giải}\par
+        \vspace{0.08cm}
+        \footnotesize Đây là dữ liệu \textbf{bán buôn/phân phối đến nhà bán lẻ},
+        không phải hóa đơn bán cho người tiêu dùng cuối.
+      \end{beamercolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.18cm}
+  \begin{beamercolorbox}[wd=\textwidth,rounded=true,sep=.5em,center]{block body}
+    \scriptsize \texttt{sales\_bottles} = số chai cửa hàng đặt mua
+    \quad·\quad
+    \texttt{sales\_dollars} = tổng giá trị dòng đặt hàng
+  \end{beamercolorbox}
+
+  \source{Iowa Data Hub và Socrata API documentation for Iowa Liquor Sales.}
+\end{frame}
+
+\end{document}
