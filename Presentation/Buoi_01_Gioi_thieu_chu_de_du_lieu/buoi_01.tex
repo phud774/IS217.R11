@@ -85,80 +85,93 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{1. Vì sao chọn chủ đề này?}
-  \small
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \textbf{Một thị trường có cơ chế phân phối đặc thù}
-      \vspace{0.08cm}
-      \begin{itemize}
-        \item Iowa quản lý tập trung hoạt động bán buôn \textit{spirits} (rượu mạnh).
-        \item Cơ quan của bang phân phối đến hơn \alert{2.000 nhà bán lẻ tư nhân}.
-        \item Các điểm bán Class E gồm siêu thị, cửa hàng rượu và cửa hàng tiện lợi.
-      \end{itemize}
+\begin{frame}{1. Bài toán phân phối tại Iowa}
+  \begin{beamercolorbox}[wd=\textwidth,rounded=true,sep=.75em,center]{block body}
+    \textbf{Bang Iowa là đầu mối bán buôn rượu mạnh}
+    \quad $\longrightarrow$ \quad
+    phân phối đến hơn \alert{2.000 nhà bán lẻ Class E}
+  \end{beamercolorbox}
 
-      \vspace{0.08cm}
-      \begin{beamercolorbox}[rounded=true,sep=0.55em]{block body}
-        \textbf{Ý nghĩa:} chủ đề phản ánh bài toán phân phối thực tế ở quy mô toàn bang,
-        không chỉ là bán hàng của một cửa hàng riêng lẻ.
-      \end{beamercolorbox}
-    \end{column}
+  \vspace{0.42cm}
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \node[rounded corners=5pt, fill=SoftBlue, text width=3.55cm,
+          minimum height=1.75cm, align=center, inner sep=8pt] (scale) at (1.9,1.25) {
+      \textbf{\color{Navy}Quy mô lớn}\\[3pt]
+      \small Nhiều cửa hàng, khu vực, sản phẩm và nhà cung cấp
+    };
+    \node[rounded corners=5pt, fill=SoftAmber, text width=3.55cm,
+          minimum height=1.75cm, align=center, inner sep=8pt] (change) at (6.25,1.25) {
+      \textbf{\color{Navy}Nhu cầu biến động}\\[3pt]
+      \small Thay đổi theo thời gian, địa điểm và danh mục
+    };
+    \node[rounded corners=5pt, fill=SoftBlue, text width=3.55cm,
+          minimum height=1.75cm, align=center, inner sep=8pt] (decision) at (10.6,1.25) {
+      \textbf{\color{Navy}Cần ra quyết định}\\[3pt]
+      \small Nhập bao nhiêu, phân bổ ở đâu và vào thời điểm nào?
+    };
 
-    \begin{column}{0.48\textwidth}
-      \centering
-      \begin{tikzpicture}[node distance=.38cm, every node/.style={font=\small}]
-        \node[draw=Blue, fill=SoftBlue, rounded corners, minimum width=4.7cm,
-              minimum height=.72cm] (supplier) {Nhà sản xuất / Nhà cung cấp};
-        \node[draw=Navy, fill=Navy, text=white, rounded corners,
-              minimum width=4.7cm, minimum height=.9cm, below=of supplier] (state)
-              {Bang Iowa · Nhà bán buôn trung tâm};
-        \node[draw=Amber, fill=SoftAmber, rounded corners, minimum width=4.7cm,
-              minimum height=.9cm, below=of state] (retailer)
-              {Nhà bán lẻ Class E};
-        \node[draw=Muted, fill=white, rounded corners, minimum width=4.7cm,
-              minimum height=.72cm, below=of retailer] (consumer) {Người tiêu dùng};
+    \draw[->,very thick,Amber] (scale) -- (change);
+    \draw[->,very thick,Amber] (change) -- (decision);
+  \end{tikzpicture}
 
-        \draw[->,thick,Blue] (supplier) -- (state);
-        \draw[->,very thick,Amber] (state) -- node[right,text=Amber,font=\scriptsize\bfseries]
-          {phạm vi dữ liệu} (retailer);
-        \draw[->,thick,Muted] (retailer) -- (consumer);
-      \end{tikzpicture}
-    \end{column}
-  \end{columns}
+  \vspace{0.35cm}
+  \begin{beamercolorbox}[wd=.91\textwidth,rounded=true,sep=.72em,center]{alertblock body}
+    \normalsize\bfseries
+    Bài toán: phân phối \alert{đúng sản phẩm} · \alert{đúng nơi} · \alert{đúng thời điểm}
+  \end{beamercolorbox}
 
   \source{Iowa Department of Revenue, FY25 Annual Report và License Classifications.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{1. Giá trị phân tích của chủ đề}
-  \centering
-  \begin{tikzpicture}[x=1cm,y=1cm]
-    \node[rounded corners=5pt, fill=SoftBlue, text width=5.7cm,
-          minimum height=1.55cm, align=left, inner sep=9pt] at (3.0,2.8) {
-      \textbf{\color{Navy}Xu hướng nhu cầu}\\
-      \small Nhu cầu nhập hàng thay đổi thế nào theo tháng và quý?
-    };
-    \node[rounded corners=5pt, fill=SoftAmber, text width=5.7cm,
-          minimum height=1.55cm, align=left, inner sep=9pt] at (9.5,2.8) {
-      \textbf{\color{Navy}Hiệu quả phân phối}\\
-      \small Cửa hàng và khu vực nào có sản lượng phân phối cao?
-    };
-    \node[rounded corners=5pt, fill=SoftAmber, text width=5.7cm,
-          minimum height=1.55cm, align=left, inner sep=9pt] at (3.0,.65) {
-      \textbf{\color{Navy}Sản phẩm \& nhà cung cấp}\\
-      \small Danh mục, sản phẩm và nhà cung cấp nào nổi bật?
-    };
-    \node[rounded corners=5pt, fill=SoftBlue, text width=5.7cm,
-          minimum height=1.55cm, align=left, inner sep=9pt] at (9.5,.65) {
-      \textbf{\color{Navy}Hỗ trợ quyết định}\\
-      \small Lập kế hoạch hàng hóa, tồn kho và phân bổ theo khu vực.
-    };
-  \end{tikzpicture}
+\begin{frame}{1. Vì sao nhóm chọn chủ đề này?}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.57\textwidth}
+      \textbf{Bốn câu hỏi cần trả lời}
+      \vspace{0.14cm}
 
-  \vspace{0.25cm}
-  \begin{beamercolorbox}[wd=.94\textwidth,rounded=true,sep=.75em,center]{block body}
-    \textbf{Mục tiêu:} biến dữ liệu đơn hàng thành thông tin hỗ trợ quản lý
-    hoạt động phân phối rượu mạnh tại Iowa.
+      \begin{tikzpicture}[x=1cm,y=1cm]
+        \node[rounded corners=4pt, fill=SoftBlue, text width=3.0cm,
+              minimum height=1.25cm, align=left, inner sep=7pt] at (1.65,2.35) {
+          \small\textbf{\color{Navy}KHI NÀO?}\\[-1pt]
+          \scriptsize Nhu cầu tăng hoặc giảm?
+        };
+        \node[rounded corners=4pt, fill=SoftAmber, text width=3.0cm,
+              minimum height=1.25cm, align=left, inner sep=7pt] at (5.25,2.35) {
+          \small\textbf{\color{Navy}Ở ĐÂU?}\\[-1pt]
+          \scriptsize Khu vực có nhu cầu cao?
+        };
+        \node[rounded corners=4pt, fill=SoftAmber, text width=3.0cm,
+              minimum height=1.25cm, align=left, inner sep=7pt] at (1.65,.55) {
+          \small\textbf{\color{Navy}SẢN PHẨM?}\\[-1pt]
+          \scriptsize Danh mục được đặt nhiều?
+        };
+        \node[rounded corners=4pt, fill=SoftBlue, text width=3.0cm,
+              minimum height=1.25cm, align=left, inner sep=7pt] at (5.25,.55) {
+          \small\textbf{\color{Navy}NHÀ CUNG CẤP?}\\[-1pt]
+          \scriptsize Ai đóng góp lớn vào hệ thống?
+        };
+      \end{tikzpicture}
+    \end{column}
+
+    \begin{column}{0.39\textwidth}
+      \textbf{Giá trị sử dụng}
+      \vspace{0.12cm}
+      \small
+      \begin{itemize}
+        \item Theo dõi xu hướng nhu cầu.
+        \item Lập kế hoạch hàng hóa và tồn kho.
+        \item Phân bổ sản phẩm theo khu vực.
+        \item Đánh giá sản phẩm và nhà cung cấp.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.28cm}
+  \begin{beamercolorbox}[wd=.94\textwidth,rounded=true,sep=.7em,center]{block body}
+    \textbf{Lý do lựa chọn:} biến dữ liệu đơn hàng thành thông tin
+    hỗ trợ quản lý hoạt động phân phối trên toàn bang.
   \end{beamercolorbox}
 \end{frame}
 

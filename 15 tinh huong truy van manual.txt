@@ -1,0 +1,17 @@
+15 TÌNH HUỐNG TRUY VẤN BẰNG ANALYSIS SERVICES (MANUAL)
+
+Tổng giá trị phân phối (Sales Dollars) trong từng tháng từ tháng 1 đến tháng 12 năm 2024 là bao nhiêu? Tháng nào cao nhất, tháng nào thấp nhất và chênh lệch giữa hai tháng là bao nhiêu USD?
+Tổng số chai được phân phối (Sales Bottles) trong từng quý của năm 2024 là bao nhiêu? Quý nào có số chai cao nhất và quý nào có số chai thấp nhất?
+Mười quận có tổng giá trị phân phối (Sales Dollars) cao nhất trong năm 2024 là những quận nào và giá trị tương ứng của từng quận là bao nhiêu?
+Mười thành phố có tổng sản lượng phân phối tính theo lít (Sales Liters) cao nhất trong năm 2024 là những thành phố nào?
+Trong quận POLK, mười cửa hàng có tổng giá trị phân phối (Sales Dollars) cao nhất năm 2024 là những cửa hàng nào và mỗi cửa hàng đạt bao nhiêu USD?
+Tổng giá trị phân phối (Sales Dollars) năm 2024 của từng danh mục trong năm danh mục AMERICAN VODKAS, CANADIAN WHISKIES, STRAIGHT BOURBON WHISKIES, 100% AGAVE TEQUILA và WHISKEY LIQUEUR là bao nhiêu? Danh mục nào có tổng giá trị cao nhất?
+Mười danh mục sản phẩm có tổng số chai được phân phối (Sales Bottles) cao nhất trong năm 2024 là những danh mục nào?
+Trong danh mục AMERICAN VODKAS, mười sản phẩm có tổng giá trị phân phối (Sales Dollars) cao nhất năm 2024 là những sản phẩm nào?
+Mười nhà cung cấp có tổng giá trị phân phối (Sales Dollars) cao nhất trong năm 2024 là những nhà cung cấp nào và giá trị của từng nhà cung cấp là bao nhiêu?
+Tổng giá trị phân phối (Sales Dollars) của DIAGEO AMERICAS trong từng tháng năm 2024 là bao nhiêu? Tháng nào nhà cung cấp này đạt giá trị cao nhất và thấp nhất?
+Trong từng quý năm 2024, tổng giá trị phân phối (Sales Dollars) của từng danh mục trong ba danh mục AMERICAN VODKAS, CANADIAN WHISKIES và STRAIGHT BOURBON WHISKIES là bao nhiêu? Danh mục nào có tổng giá trị cao nhất ở mỗi quý?
+Tổng giá trị phân phối (Sales Dollars) của ba quận POLK, LINN và SCOTT trong từng quý năm 2024 là bao nhiêu?
+Trong quận POLK, những cửa hàng nào xuất hiện đồng thời trong nhóm mười cửa hàng có tổng số chai nhập (Sales Bottles) cao nhất và nhóm mười cửa hàng có tổng giá trị phân phối (Sales Dollars) cao nhất năm 2024?
+Các nhóm dung tích chai 375 ml, 750 ml, 1.000 ml và 1.750 ml có tổng số chai (Sales Bottles) và tổng giá trị phân phối (Sales Dollars) bao nhiêu trong năm 2024? Dung tích nào dẫn đầu theo từng chỉ tiêu?
+Tại thành phố DES MOINES thuộc quận POLK, tổng giá trị phân phối (Sales Dollars) của từng cửa hàng trong ba tháng 10, 11 và 12 năm 2024 là bao nhiêu? Cửa hàng nào có giá trị cao nhất trong từng tháng?

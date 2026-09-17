@@ -13,35 +13,37 @@ Trong buổi đầu tiên, nhóm sẽ giới thiệu hai nội dung: vì sao nh�
 
 *[Chuyển sang slide 2]*
 
-## Slide 2 – Vì sao chọn chủ đề này?
+## Slide 2 – Bài toán phân phối tại Iowa
 
-Điểm đặc biệt của chủ đề nằm ở cơ chế phân phối rượu mạnh tại Iowa.
+Lý do nhóm chọn chủ đề bắt đầu từ một bài toán thực tế trong hệ thống phân phối rượu mạnh tại Iowa.
 
-Bang Iowa quản lý tập trung hoạt động bán buôn rượu mạnh. Cơ quan của bang đóng vai trò nhà bán buôn trung tâm và phân phối sản phẩm đến hơn 2.000 nhà bán lẻ tư nhân. Các nhà bán lẻ này có giấy phép Class E, ví dụ như siêu thị, cửa hàng rượu và cửa hàng tiện lợi.
+Bang Iowa là đầu mối bán buôn, chịu trách nhiệm phân phối sản phẩm đến hơn 2.000 nhà bán lẻ Class E trên toàn bang.
 
-*[Chỉ vào sơ đồ]*
+Hệ thống này có nhiều cửa hàng, khu vực, sản phẩm và nhà cung cấp. Đồng thời, nhu cầu nhập hàng không cố định mà thay đổi theo thời gian, địa điểm và từng danh mục sản phẩm.
 
-Chuỗi phân phối bắt đầu từ nhà sản xuất hoặc nhà cung cấp. Sản phẩm đi qua hệ thống phân phối của bang, sau đó đến các nhà bán lẻ Class E và cuối cùng mới đến người tiêu dùng.
+Điều đó đặt ra một câu hỏi quản lý cụ thể: cần nhập bao nhiêu hàng, phân bổ đến đâu và vào thời điểm nào?
 
-Dữ liệu của nhóm nằm ở đoạn từ cơ quan phân phối của bang đến nhà bán lẻ. Vì vậy, đây là dữ liệu bán buôn hoặc phân phối, không phải hóa đơn bán trực tiếp cho người tiêu dùng.
+Nếu không hiểu đúng nhu cầu, hệ thống có thể phân bổ hàng chưa phù hợp, thiếu sản phẩm tại nơi có nhu cầu cao hoặc tồn kho nhiều sản phẩm có nhu cầu thấp.
 
-Nhóm chọn chủ đề này vì nó thể hiện một bài toán thực tế ở quy mô toàn bang, đồng thời có ý nghĩa đối với việc quản lý hàng hóa, khu vực phân phối và nhu cầu nhập hàng.
+Vì vậy, bài toán cốt lõi mà nhóm quan tâm là làm thế nào để phân phối đúng sản phẩm, đến đúng nơi và vào đúng thời điểm.
 
 *[Chuyển sang slide 3]*
 
-## Slide 3 – Giá trị phân tích của chủ đề
+## Slide 3 – Vì sao nhóm chọn chủ đề này?
 
-Nhóm xác định bốn hướng phân tích chính.
+Từ bài toán trên, nhóm lựa chọn chủ đề để trả lời bốn câu hỏi chính.
 
-Thứ nhất là theo dõi nhu cầu nhập hàng thay đổi theo tháng và quý.
+Thứ nhất, nhu cầu nhập hàng tăng hoặc giảm vào thời điểm nào?
 
-Thứ hai là so sánh hiệu quả phân phối giữa các cửa hàng và khu vực.
+Thứ hai, khu vực và cửa hàng nào có nhu cầu cao?
 
-Thứ ba là xác định những danh mục, sản phẩm và nhà cung cấp nổi bật.
+Thứ ba, sản phẩm và danh mục nào được đặt mua nhiều?
 
-Cuối cùng, kết quả phân tích có thể hỗ trợ lập kế hoạch hàng hóa, tồn kho và phân bổ sản phẩm theo khu vực.
+Cuối cùng, nhà cung cấp nào đóng góp lớn vào hệ thống phân phối?
 
-Mục tiêu chung của đề tài là chuyển dữ liệu đơn hàng thành thông tin có ý nghĩa, phục vụ việc theo dõi và quản lý hoạt động phân phối rượu mạnh tại Iowa.
+Kết quả phân tích có thể hỗ trợ theo dõi xu hướng, lập kế hoạch hàng hóa và tồn kho, phân bổ sản phẩm theo khu vực, đồng thời đánh giá sản phẩm và nhà cung cấp.
+
+Đây là lý do cụ thể nhóm chọn chủ đề: biến dữ liệu đơn hàng thành thông tin hỗ trợ quản lý hoạt động phân phối rượu mạnh trên phạm vi toàn bang.
 
 *[Chuyển sang slide 4]*
 
@@ -70,6 +72,18 @@ Như vậy, mỗi hàng trong dữ liệu đại diện cho một sản phẩm c
 Cần lưu ý đây là dữ liệu phân phối đến nhà bán lẻ, không phải hóa đơn bán trực tiếp cho người tiêu dùng cuối.
 
 Tóm lại, bộ dữ liệu cho biết cửa hàng nào đã đặt sản phẩm gì, tại đâu, vào thời điểm nào, với số lượng và tổng giá trị bao nhiêu. Đây sẽ là dữ liệu đầu vào để nhóm tiếp tục thực hiện các phần sau của đồ án.
+
+*[Mở slide sơ đồ sao riêng nếu cần trình bày tiếp]*
+
+## Slide riêng – Thiết kế Data Warehouse đề xuất
+
+Từ 23 thuộc tính ban đầu, nhóm đề xuất tổ chức kho dữ liệu theo mô hình sao.
+
+Ở trung tâm là bảng FACT_LIQUOR_SALES. Mỗi hàng đại diện cho một sản phẩm trong một hóa đơn, tại một cửa hàng và một ngày đặt hàng. Các thuộc tính trong bảng ghi nhận hóa đơn, thời gian, cửa hàng, sản phẩm, nhà cung cấp, số chai, giá trị và thể tích.
+
+Bốn bảng chiều trả lời bốn nhóm câu hỏi chính: DIM_DATE cho biết giao dịch diễn ra khi nào; DIM_STORE cho biết cửa hàng và khu vực nào; DIM_PRODUCT mô tả sản phẩm và danh mục; DIM_VENDOR cho biết nhà cung cấp.
+
+Cấu trúc này giúp truy vấn doanh thu và sản lượng linh hoạt theo thời gian, cửa hàng, khu vực, sản phẩm, danh mục hoặc nhà cung cấp, đồng thời tránh lặp lại các thuộc tính mô tả trong bảng fact.
 
 Phần trình bày của nhóm em đến đây là kết thúc. Cảm ơn thầy/cô và các bạn đã lắng nghe.
 
