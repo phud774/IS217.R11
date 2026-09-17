@@ -26,6 +26,117 @@ NUMBER_COLUMNS = {
     "pack", "bottle_volume_ml", "state_bottle_cost", "state_bottle_retail",
     "sales_bottles", "sales_dollars", "sales_liters", "sales_gallons",
 }
+RELATIONSHIPS = (
+    ("store_no", "store_name"),
+    ("store_no", "store_address"),
+    ("store_no", "store_city"),
+    ("store_no", "store_zip_code"),
+    ("store_no", "county_fips_code"),
+    ("store_no", "county_name"),
+    ("item_no", "im_desc"),
+    ("item_no", "pack"),
+    ("item_no", "bottle_volume_ml"),
+    ("item_no", "category_code"),
+    ("item_no", "category_name"),
+    ("item_no", "vendor_number"),
+    ("vendor_number", "vendor_name"),
+    ("county_fips_code", "county_name"),
+    ("category_code", "category_name"),
+)
+
+
+def relationship_value(column: str) -> pl.Expr:
+    """Bỏ khoảng trắng hai đầu và xem chuỗi rỗng như giá trị thiếu."""
+    value = pl.col(column).cast(pl.String).str.strip_chars()
+    return pl.when(value == "").then(None).otherwise(value)
+
+
+def check_relationships(
+    data: pl.LazyFrame, profiles: list[dict], output: Path
+) -> tuple[list[dict], int]:
+    """Kiểm tra cả mã -> thuộc tính và thuộc tính -> mã trên toàn bộ CSV."""
+    available = {profile["column"]: profile for profile in profiles}
+    summaries: list[dict] = []
+    conflicts: list[dict] = []
+    checked_pairs = 0
+
+    for key, attribute in RELATIONSHIPS:
+        if key not in available or attribute not in available:
+            continue
+        checked_pairs += 1
+        print(f"  Relationship: {key} <-> {attribute}", flush=True)
+        date = pl.col("ordered_on") if "ordered_on" in available else pl.lit(None, dtype=pl.String)
+        pairs = collect(
+            data.select(
+                relationship_value(key).alias("key_value"),
+                relationship_value(attribute).alias("attribute_value"),
+                date.alias("ordered_on"),
+            )
+            .filter(pl.col("key_value").is_not_null() & pl.col("attribute_value").is_not_null())
+            .group_by("key_value", "attribute_value")
+            .agg(
+                pl.len().alias("pair_rows"),
+                pl.col("ordered_on").min().alias("first_date"),
+                pl.col("ordered_on").max().alias("last_date"),
+            )
+        )
+
+        for source_column, target_column, source_field, target_field in (
+            (key, attribute, "key_value", "attribute_value"),
+            (attribute, key, "attribute_value", "key_value"),
+        ):
+            by_source = pairs.group_by(source_field).agg(
+                pl.len().alias("distinct_targets"),
+                pl.col("pair_rows").sum().alias("rows"),
+            )
+            multiple = by_source.filter(pl.col("distinct_targets") > 1)
+            summaries.append({
+                "source_column": source_column,
+                "target_column": target_column,
+                "source_distinct": by_source.height,
+                "source_missing_rows": available[source_column]["missing_count"],
+                "target_missing_rows": available[target_column]["missing_count"],
+                "sources_with_multiple_targets": multiple.height,
+                "affected_rows": int(multiple["rows"].sum() or 0),
+                "max_targets_per_source": int(by_source["distinct_targets"].max() or 0),
+            })
+
+            if multiple.height:
+                detail = pairs.join(multiple.select(source_field), on=source_field)
+                for row in detail.iter_rows(named=True):
+                    conflicts.append({
+                        "source_column": source_column,
+                        "target_column": target_column,
+                        "source_value": row[source_field],
+                        "target_value": row[target_field],
+                        "pair_rows": row["pair_rows"],
+                        "first_date": row["first_date"],
+                        "last_date": row["last_date"],
+                    })
+
+    pl.DataFrame(summaries, schema={
+        "source_column": pl.String,
+        "target_column": pl.String,
+        "source_distinct": pl.Int64,
+        "source_missing_rows": pl.Int64,
+        "target_missing_rows": pl.Int64,
+        "sources_with_multiple_targets": pl.Int64,
+        "affected_rows": pl.Int64,
+        "max_targets_per_source": pl.Int64,
+    }).write_csv(output / "key_relationships.csv")
+    pl.DataFrame(conflicts, schema={
+        "source_column": pl.String,
+        "target_column": pl.String,
+        "source_value": pl.String,
+        "target_value": pl.String,
+        "pair_rows": pl.Int64,
+        "first_date": pl.String,
+        "last_date": pl.String,
+    }).sort("source_column", "target_column", "source_value", "pair_rows",
+            descending=[False, False, False, True]).write_csv(
+                output / "key_relationship_conflicts.csv"
+            )
+    return summaries, checked_pairs
 
 
 def arguments() -> argparse.Namespace:
@@ -131,6 +242,7 @@ def main() -> None:
     pl.DataFrame(profiles).write_csv(args.output / "column_profile.csv")
     if numeric:
         pl.DataFrame(numeric).write_csv(args.output / "numeric_summary.csv")
+    relationships, checked_pairs = check_relationships(data, profiles, args.output)
 
     # Mỗi cột được gom riêng để không giữ đồng thời 23 bảng tần suất trong RAM.
     # File riêng cho từng cột giúp xem đầy đủ tên giá trị, kể cả dấu phẩy / xuống dòng.
@@ -166,11 +278,15 @@ def main() -> None:
         "date_max": stats.get(f"max_{columns.index('ordered_on')}") if "ordered_on" in columns else None,
         "value_files": "values/<column>.csv",
         "value_limit_per_column": None if args.all_values else args.max_values,
+        "relationship_pairs_checked": checked_pairs,
+        "relationship_summary_file": "key_relationships.csv",
+        "relationship_conflicts_file": "key_relationship_conflicts.csv",
         "notes": [
             "distinct_non_null là số giá trị khác nhau chính xác, không tính null.",
             "blank_count đếm chuỗi rỗng hoặc chỉ có khoảng trắng; nan_count đếm NaN của cột số.",
             "Các file values bỏ qua null; tỷ lệ pct_of_rows tính trên toàn bộ dòng.",
             "File values của cột nhiều giá trị chỉ chứa các giá trị xuất hiện nhiều nhất, trừ khi dùng --all-values.",
+            "Kiểm tra quan hệ bỏ qua cặp có mã hoặc thuộc tính bị thiếu; số dòng thiếu được ghi riêng.",
         ],
     }
     (args.output / "overview.json").write_text(
@@ -186,6 +302,8 @@ def main() -> None:
         "- `column_profile.csv`: kiểu, số null, chuỗi trống, NaN, tỷ lệ thiếu, số giá trị phân biệt.",
         "- `numeric_summary.csv`: min, max, trung bình, độ lệch chuẩn, số 0 và số âm.",
         "- `values/<tên cột>.csv`: giá trị, số lần xuất hiện và tỷ lệ trên toàn bộ dòng.",
+        "- `key_relationships.csv`: mỗi chiều mã ↔ thuộc tính, số mã có nhiều giá trị và số dòng liên quan.",
+        "- `key_relationship_conflicts.csv`: từng cặp giá trị xung đột, số dòng và khoảng ngày xuất hiện.",
         "",
         "## Tổng quan từng cột",
         "",
@@ -201,12 +319,37 @@ def main() -> None:
         )
     report.extend([
         "",
+        "## Kiểm tra mã và thuộc tính",
+        "",
+        "Giá trị null và chuỗi trống không được tính là một tên/địa chỉ khác; số dòng thiếu vẫn được ghi trong `key_relationships.csv`.",
+        "",
+        "| Mã | Thuộc tính | Mã có nhiều giá trị | Dòng liên quan | Thuộc tính dùng cho nhiều mã | Dòng thiếu thuộc tính |",
+        "|---|---|---:|---:|---:|---:|",
+    ])
+    for forward, reverse in zip(relationships[::2], relationships[1::2]):
+        report.append(
+            f"| `{forward['source_column']}` | `{forward['target_column']}` | "
+            f"{forward['sources_with_multiple_targets']:,} | {forward['affected_rows']:,} | "
+            f"{reverse['sources_with_multiple_targets']:,} | {forward['target_missing_rows']:,} |"
+        )
+    invoice = next((profile for profile in profiles if profile["column"] == "invoice_id"), None)
+    if invoice:
+        unique = invoice["missing_count"] == 0 and invoice["distinct_non_null"] == total_rows
+        report.extend([
+            "",
+            f"- `invoice_id`: {'duy nhất trên mọi dòng' if unique else 'có giá trị thiếu hoặc trùng'} "
+            f"({invoice['distinct_non_null']:,} mã trên {total_rows:,} dòng).",
+        ])
+    report.extend([
+        "",
         "## Lưu ý đọc kết quả",
         "",
         "- Null, chuỗi trống (kể cả chỉ có khoảng trắng) và NaN được đếm riêng.",
         "- Số giá trị phân biệt được tính chính xác trên toàn bộ dữ liệu; null không được tính.",
         "- Cột có nhiều giá trị chỉ xuất các giá trị phổ biến nhất theo mặc định. Dùng `--all-values` để xuất hết.",
         "- Giá trị âm có thể là giao dịch hoàn trả hoặc điều chỉnh; cần xem nghiệp vụ trước khi loại bỏ.",
+        "- Một mã có nhiều thuộc tính có thể do thay đổi theo thời gian; xem ngày trong file xung đột trước khi chuẩn hóa.",
+        "- Nhiều mã dùng cùng một tên không tự động là lỗi; cần đối chiếu nghiệp vụ trước khi gộp.",
         "",
     ])
     (args.output / "report.md").write_text("\n".join(report), encoding="utf-8")

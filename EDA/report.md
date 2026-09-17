@@ -6,6 +6,8 @@
 - `column_profile.csv`: kiểu, số null, chuỗi trống, NaN, tỷ lệ thiếu, số giá trị phân biệt.
 - `numeric_summary.csv`: min, max, trung bình, độ lệch chuẩn, số 0 và số âm.
 - `values/<tên cột>.csv`: giá trị, số lần xuất hiện và tỷ lệ trên toàn bộ dòng.
+- `key_relationships.csv`: mỗi chiều mã ↔ thuộc tính, số mã có nhiều giá trị và số dòng liên quan.
+- `key_relationship_conflicts.csv`: từng cặp giá trị xung đột, số dòng và khoảng ngày xuất hiện.
 
 ## Tổng quan từng cột
 
@@ -35,9 +37,35 @@
 | `sales_liters` | Float64 | 0 | 0.0000% | 659 | 9.0 (514,768); 10.5 (318,442); 4.5 (249,343) |
 | `sales_gallons` | Float64 | 0 | 0.0000% | 650 | 2.37 (514,768); 2.77 (318,442); 1.18 (249,343) |
 
+## Kiểm tra mã và thuộc tính
+
+Giá trị null và chuỗi trống không được tính là một tên/địa chỉ khác; số dòng thiếu vẫn được ghi trong `key_relationships.csv`.
+
+| Mã | Thuộc tính | Mã có nhiều giá trị | Dòng liên quan | Thuộc tính dùng cho nhiều mã | Dòng thiếu thuộc tính |
+|---|---|---:|---:|---:|---:|
+| `store_no` | `store_name` | 13 | 29,047 | 21 | 0 |
+| `store_no` | `store_address` | 6 | 5,319 | 13 | 422 |
+| `store_no` | `store_city` | 0 | 0 | 277 | 422 |
+| `store_no` | `store_zip_code` | 0 | 0 | 313 | 422 |
+| `store_no` | `county_fips_code` | 0 | 0 | 99 | 422 |
+| `store_no` | `county_name` | 0 | 0 | 99 | 422 |
+| `item_no` | `im_desc` | 125 | 16,332 | 519 | 0 |
+| `item_no` | `pack` | 22 | 5,350 | 15 | 0 |
+| `item_no` | `bottle_volume_ml` | 6 | 994 | 14 | 0 |
+| `item_no` | `category_code` | 151 | 42,208 | 47 | 0 |
+| `item_no` | `category_name` | 132 | 41,923 | 44 | 0 |
+| `item_no` | `vendor_number` | 50 | 13,361 | 198 | 0 |
+| `vendor_number` | `vendor_name` | 0 | 0 | 0 | 0 |
+| `county_fips_code` | `county_name` | 0 | 0 | 0 | 422 |
+| `category_code` | `category_name` | 0 | 0 | 4 | 0 |
+
+- `invoice_id`: duy nhất trên mọi dòng (2,590,975 mã trên 2,590,975 dòng).
+
 ## Lưu ý đọc kết quả
 
 - Null, chuỗi trống (kể cả chỉ có khoảng trắng) và NaN được đếm riêng.
 - Số giá trị phân biệt được tính chính xác trên toàn bộ dữ liệu; null không được tính.
 - Cột có nhiều giá trị chỉ xuất các giá trị phổ biến nhất theo mặc định. Dùng `--all-values` để xuất hết.
 - Giá trị âm có thể là giao dịch hoàn trả hoặc điều chỉnh; cần xem nghiệp vụ trước khi loại bỏ.
+- Một mã có nhiều thuộc tính có thể do thay đổi theo thời gian; xem ngày trong file xung đột trước khi chuẩn hóa.
+- Nhiều mã dùng cùng một tên không tự động là lỗi; cần đối chiếu nghiệp vụ trước khi gộp.
