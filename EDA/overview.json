@@ -1,0 +1,46 @@
+{
+  "source_files": [
+    "C:\\coding_space\\study\\IS217\\data\\iowa_liquor_sales_2024_1261_rows_part_0001.csv",
+    "C:\\coding_space\\study\\IS217\\data\\iowa_liquor_sales_2024_1261_rows_part_0002.csv",
+    "C:\\coding_space\\study\\IS217\\data\\iowa_liquor_sales_2024_1261_rows_part_0003.csv",
+    "C:\\coding_space\\study\\IS217\\data\\iowa_liquor_sales_2024_1261_rows_part_0004.csv",
+    "C:\\coding_space\\study\\IS217\\data\\iowa_liquor_sales_2024_1261_rows_part_0005.csv"
+  ],
+  "row_count": 2590975,
+  "column_count": 23,
+  "column_names": [
+    "invoice_id",
+    "ordered_on",
+    "store_no",
+    "store_name",
+    "store_address",
+    "store_city",
+    "store_zip_code",
+    "county_fips_code",
+    "county_name",
+    "category_code",
+    "category_name",
+    "vendor_number",
+    "vendor_name",
+    "item_no",
+    "im_desc",
+    "pack",
+    "bottle_volume_ml",
+    "state_bottle_cost",
+    "state_bottle_retail",
+    "sales_bottles",
+    "sales_dollars",
+    "sales_liters",
+    "sales_gallons"
+  ],
+  "date_min": "2024-01-01",
+  "date_max": "2024-12-31",
+  "value_files": "values/<column>.csv",
+  "value_limit_per_column": 100,
+  "notes": [
+    "distinct_non_null là số giá trị khác nhau chính xác, không tính null.",
+    "blank_count đếm chuỗi rỗng hoặc chỉ có khoảng trắng; nan_count đếm NaN của cột số.",
+    "Các file values bỏ qua null; tỷ lệ pct_of_rows tính trên toàn bộ dòng.",
+    "File values của cột nhiều giá trị chỉ chứa các giá trị xuất hiện nhiều nhất, trừ khi dùng --all-values."
+  ]
+}
