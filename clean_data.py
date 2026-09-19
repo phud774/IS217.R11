@@ -50,14 +50,6 @@ DROP_COLUMNS = {
 }
 
 EXPECTED_COLUMNS = set(KEEP_COLUMNS) | DROP_COLUMNS
-NULL_TEXT = {"null", "none", "nan", "n/a"}
-
-
-def clean_value(value: str) -> str:
-    value = value.strip()
-    return "" if value.casefold() in NULL_TEXT else value
-
-
 def read_header(reader: csv.reader, source: Path) -> list[str]:
     header = next(reader, None)
     if header is None or len(header) != len(EXPECTED_COLUMNS) or set(header) != EXPECTED_COLUMNS:
@@ -90,7 +82,7 @@ def clean_file(source: Path, output_dir: Path) -> tuple[int, int]:
                         raise ValueError(
                             f"Dòng CSV sai số cột tại {source}:{reader.line_num}"
                         )
-                    selected = [clean_value(row[index]) for index in indices]
+                    selected = [row[index] for index in indices]
                     missing_rows += any(not value for value in selected)
                     writer.writerow(selected)
 

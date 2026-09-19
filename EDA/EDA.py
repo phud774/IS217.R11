@@ -60,19 +60,32 @@ def check_relationships(
     conflicts: list[dict] = []
     checked_pairs = 0
 
+    # Số source_value mẫu tối đa được in ra terminal khi gặp quan hệ 1 -> nhiều.
+    MAX_CONFLICT_EXAMPLES = 5
+
     for key, attribute in RELATIONSHIPS:
         if key not in available or attribute not in available:
             continue
+
         checked_pairs += 1
         print(f"  Relationship: {key} <-> {attribute}", flush=True)
-        date = pl.col("ordered_on") if "ordered_on" in available else pl.lit(None, dtype=pl.String)
+
+        date = (
+            pl.col("ordered_on")
+            if "ordered_on" in available
+            else pl.lit(None, dtype=pl.String)
+        )
+
         pairs = collect(
             data.select(
                 relationship_value(key).alias("key_value"),
                 relationship_value(attribute).alias("attribute_value"),
                 date.alias("ordered_on"),
             )
-            .filter(pl.col("key_value").is_not_null() & pl.col("attribute_value").is_not_null())
+            .filter(
+                pl.col("key_value").is_not_null()
+                & pl.col("attribute_value").is_not_null()
+            )
             .group_by("key_value", "attribute_value")
             .agg(
                 pl.len().alias("pair_rows"),
@@ -85,11 +98,23 @@ def check_relationships(
             (key, attribute, "key_value", "attribute_value"),
             (attribute, key, "attribute_value", "key_value"),
         ):
-            by_source = pairs.group_by(source_field).agg(
-                pl.len().alias("distinct_targets"),
-                pl.col("pair_rows").sum().alias("rows"),
+            by_source = (
+                pairs.group_by(source_field)
+                .agg(
+                    pl.len().alias("distinct_targets"),
+                    pl.col("pair_rows").sum().alias("rows"),
+                )
             )
-            multiple = by_source.filter(pl.col("distinct_targets") > 1)
+
+            multiple = (
+                by_source
+                .filter(pl.col("distinct_targets") > 1)
+                .sort(
+                    ["distinct_targets", "rows"],
+                    descending=[True, True],
+                )
+            )
+
             summaries.append({
                 "source_column": source_column,
                 "target_column": target_column,
@@ -98,11 +123,65 @@ def check_relationships(
                 "target_missing_rows": available[target_column]["missing_count"],
                 "sources_with_multiple_targets": multiple.height,
                 "affected_rows": int(multiple["rows"].sum() or 0),
-                "max_targets_per_source": int(by_source["distinct_targets"].max() or 0),
+                "max_targets_per_source": int(
+                    by_source["distinct_targets"].max() or 0
+                ),
             })
 
             if multiple.height:
-                detail = pairs.join(multiple.select(source_field), on=source_field)
+                detail = pairs.join(
+                    multiple.select(source_field),
+                    on=source_field,
+                )
+
+                # ---------------------------------------------------------
+                # In một vài ví dụ quan hệ 1 source -> nhiều target
+                # ---------------------------------------------------------
+                print(
+                    f"    [CONFLICT] {multiple.height:,} "
+                    f"{source_column} có nhiều {target_column}",
+                    flush=True,
+                )
+
+                example_sources = multiple.head(MAX_CONFLICT_EXAMPLES)
+
+                for example in example_sources.iter_rows(named=True):
+                    source_value = example[source_field]
+                    distinct_targets = int(example["distinct_targets"])
+
+                    targets = (
+                        detail
+                        .filter(pl.col(source_field) == source_value)
+                        .sort("pair_rows", descending=True)
+                    )
+
+                    print(
+                        f"      {source_column} = {source_value!r} "
+                        f"-> {distinct_targets} giá trị:",
+                        flush=True,
+                    )
+
+                    for target_row in targets.iter_rows(named=True):
+                        print(
+                            f"        - {target_column} = "
+                            f"{target_row[target_field]!r} "
+                            f"({target_row['pair_rows']:,} dòng, "
+                            f"{target_row['first_date']} -> "
+                            f"{target_row['last_date']})",
+                            flush=True,
+                        )
+
+                if multiple.height > MAX_CONFLICT_EXAMPLES:
+                    print(
+                        f"      ... còn "
+                        f"{multiple.height - MAX_CONFLICT_EXAMPLES:,} "
+                        f"{source_column} khác",
+                        flush=True,
+                    )
+
+                # ---------------------------------------------------------
+                # Vẫn lưu toàn bộ conflict như code cũ
+                # ---------------------------------------------------------
                 for row in detail.iter_rows(named=True):
                     conflicts.append({
                         "source_column": source_column,
@@ -114,28 +193,41 @@ def check_relationships(
                         "last_date": row["last_date"],
                     })
 
-    pl.DataFrame(summaries, schema={
-        "source_column": pl.String,
-        "target_column": pl.String,
-        "source_distinct": pl.Int64,
-        "source_missing_rows": pl.Int64,
-        "target_missing_rows": pl.Int64,
-        "sources_with_multiple_targets": pl.Int64,
-        "affected_rows": pl.Int64,
-        "max_targets_per_source": pl.Int64,
-    }).write_csv(output / "key_relationships.csv")
-    pl.DataFrame(conflicts, schema={
-        "source_column": pl.String,
-        "target_column": pl.String,
-        "source_value": pl.String,
-        "target_value": pl.String,
-        "pair_rows": pl.Int64,
-        "first_date": pl.String,
-        "last_date": pl.String,
-    }).sort("source_column", "target_column", "source_value", "pair_rows",
-            descending=[False, False, False, True]).write_csv(
-                output / "key_relationship_conflicts.csv"
-            )
+    pl.DataFrame(
+        summaries,
+        schema={
+            "source_column": pl.String,
+            "target_column": pl.String,
+            "source_distinct": pl.Int64,
+            "source_missing_rows": pl.Int64,
+            "target_missing_rows": pl.Int64,
+            "sources_with_multiple_targets": pl.Int64,
+            "affected_rows": pl.Int64,
+            "max_targets_per_source": pl.Int64,
+        },
+    ).write_csv(output / "key_relationships.csv")
+
+    pl.DataFrame(
+        conflicts,
+        schema={
+            "source_column": pl.String,
+            "target_column": pl.String,
+            "source_value": pl.String,
+            "target_value": pl.String,
+            "pair_rows": pl.Int64,
+            "first_date": pl.String,
+            "last_date": pl.String,
+        },
+    ).sort(
+        "source_column",
+        "target_column",
+        "source_value",
+        "pair_rows",
+        descending=[False, False, False, True],
+    ).write_csv(
+        output / "key_relationship_conflicts.csv"
+    )
+
     return summaries, checked_pairs
 
 
