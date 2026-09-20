@@ -83,6 +83,8 @@ Từ 23 thuộc tính ban đầu, nhóm đề xuất tổ chức kho dữ liệu
 
 Bốn bảng chiều trả lời bốn nhóm câu hỏi chính: DIM_DATE cho biết giao dịch diễn ra khi nào; DIM_STORE cho biết cửa hàng và khu vực nào; DIM_PRODUCT mô tả sản phẩm và danh mục; DIM_VENDOR cho biết nhà cung cấp.
 
+Riêng DIM_STORE được thiết kế theo Slowly Changing Dimension Type 2. Mỗi phiên bản cửa hàng có một `store_key`, thời gian `valid_from`, `valid_to` và cờ `is_current`. Khi địa chỉ thay đổi, nhóm chuẩn hóa format trước; nếu đó là thay đổi thực tế thì tạo phiên bản mới thay vì ghi đè địa chỉ cũ. Bảng fact được nối với đúng phiên bản bằng cách tìm bản ghi có ngày `ordered_on` nằm trong khoảng hiệu lực.
+
 Cấu trúc này giúp truy vấn doanh thu và sản lượng linh hoạt theo thời gian, cửa hàng, khu vực, sản phẩm, danh mục hoặc nhà cung cấp, đồng thời tránh lặp lại các thuộc tính mô tả trong bảng fact.
 
 Phần trình bày của nhóm em đến đây là kết thúc. Cảm ơn thầy/cô và các bạn đã lắng nghe.
