@@ -124,3 +124,108 @@ chunk["ordered_on"] = pd.to_datetime(chunk["ordered_on"], errors="coerce")
 - **Truy vấn cục bộ:** DuckDB
 - **Trực quan hóa:** Power BI, Tableau, Matplotlib, Seaborn
 - **Xử lý dữ liệu lớn:** Apache Spark
+
+## Tiến độ xây dựng Data Warehouse bằng SSIS
+
+### Mục tiêu ETL
+
+Nạp 5 tệp CSV đã làm sạch trong `cleaned_data/` vào SQL Server bằng SSIS, sau đó chuyển dữ liệu từ bảng staging sang mô hình sao:
+
+```text
+cleaned_data/*.csv
+        |
+        v
+stg.LiquorSalesRaw
+        |
+        +--> dbo.DIM_DATE
+        +--> dbo.DIM_STORE
+        +--> dbo.DIM_PRODUCT
+        +--> dbo.DIM_VENDOR
+        |
+        v
+dbo.FACT_LIQUOR_SALES
+```
+
+Database đích là `IowaLiquorDW`. Các script khởi tạo được lưu tại:
+
+- `SQL/create_db.sql`: tạo database, schema `stg` và bảng `stg.LiquorSalesRaw` gồm 15 cột dạng chuỗi.
+- `SQL/create_tables.sql`: tạo `DIM_DATE`, `DIM_STORE`, `DIM_PRODUCT`, `DIM_VENDOR` và `FACT_LIQUOR_SALES` cùng khóa chính/khóa ngoại.
+
+### Cấu hình SSIS đã thực hiện
+
+Project SSIS nằm trong `IS217_ETL/` và package chính là `IS217_ETL/IS217_ETL/Package.dtsx`.
+
+- Đã tạo biến package `User::FilePath` kiểu `String`. Giá trị thiết kế ban đầu trỏ tới `part_0001.csv`.
+- Đã tạo `Foreach Loop Container` bằng `Foreach File Enumerator`.
+- Thư mục nguồn: `C:\coding_space\study\IS217\cleaned_data`.
+- Bộ lọc file: `*.csv`; không duyệt thư mục con; lấy tên file đầy đủ.
+- Đã map kết quả của Foreach tại index `0` vào `User::FilePath`.
+- Đã tạo Flat File Connection Manager `FF_CleanedLiquor` với code page `65001 (UTF-8)`, định dạng phân tách bằng dấu phẩy, text qualifier là dấu nháy kép và dòng đầu chứa tên cột.
+- Thuộc tính `ConnectionString` của `FF_CleanedLiquor` dùng expression `@[User::FilePath]`. Vì vậy chỉ cần một Flat File Source để đọc lần lượt cả 5 file.
+- Đã đặt `Header rows to skip = 0` và tăng độ rộng metadata của các cột chuỗi để không bị truncation. Các cột tên dùng độ rộng từ 100 đến 255; `im_desc` dùng 500.
+- Đã kết nối SQL Server bằng `Microsoft OLE DB Driver 19 for SQL Server` (`MSOLEDBSQL19.1`) với database `IowaLiquorDW`.
+- OLE DB Destination sử dụng chế độ `Table or view - fast load`, ghi vào `[stg].[LiquorSalesRaw]`, bật `TABLOCK`, đặt `Rows per batch = 100000` và `Maximum insert commit size = 100000`.
+- Đã map đủ 15 cột từ Flat File Source sang OLE DB Destination.
+- Đã đặt `DefaultCodePage = 65001` và `AlwaysUseDefaultCodePage = True` cho OLE DB Destination để thống nhất mã hóa UTF-8.
+
+Luồng lặp khi package chạy:
+
+```text
+Foreach tìm một file CSV
+        |
+        v
+User::FilePath nhận đường dẫn file hiện tại
+        |
+        v
+FF_CleanedLiquor đọc file
+        |
+        v
+OLE DB Destination ghi vào stg.LiquorSalesRaw
+```
+
+### Các lỗi đã xử lý
+
+- Task `Create Star Schema` chưa được cấu hình đầy đủ gây lỗi validation. Task này không còn cần thiết vì database và các bảng đã được tạo trước bằng script SQL.
+- Provider cũ `SQLNCLI11` không có trên máy. Connection Manager đã chuyển sang `MSOLEDBSQL19.1`.
+- OLE DB Connection ban đầu chưa chọn Initial Catalog nên không thấy bảng staging. Connection đang sử dụng database `IowaLiquorDW`.
+- Flat File Source dùng UTF-8 (`65001`) trong khi destination tự suy ra code page `1252`. OLE DB Destination đã được cấu hình dùng thống nhất code page `65001`.
+- `vendor_name` ở dòng dữ liệu đầu có trường hợp dài 58 ký tự, vượt metadata 50 ký tự. Độ rộng các cột chuỗi đã được tăng theo kích thước bảng staging.
+
+### Kết quả nạp staging
+
+Package đã chạy thành công qua cả 5 file CSV. Màn hình Data Flow hiển thị `585.514` dòng ở vòng lặp cuối, tương ứng với file `part_0005.csv`.
+
+Kết quả kiểm tra toàn bộ staging:
+
+```sql
+SELECT
+    COUNT(*) AS total_rows,
+    COUNT(DISTINCT invoice_id) AS unique_invoices,
+    MIN(TRY_CONVERT(date, ordered_on)) AS first_date,
+    MAX(TRY_CONVERT(date, ordered_on)) AS last_date
+FROM stg.LiquorSalesRaw;
+```
+
+| Chỉ tiêu | Kết quả |
+|---|---:|
+| Tổng số dòng | 2.590.975 |
+| Số `invoice_id` duy nhất | 2.590.975 |
+| Ngày nhỏ nhất | 2024-01-01 |
+| Ngày lớn nhất | 2024-12-31 |
+
+Kết quả xác nhận dữ liệu đã được nạp đủ, không mất dòng và không trùng `invoice_id`.
+
+### Bước ETL tiếp theo
+
+1. Thêm Execute SQL Task `Truncate Staging` trước Foreach Loop để package có thể chạy lại mà không tạo dữ liệu trùng.
+2. Nạp `DIM_DATE` với đầy đủ 366 ngày của năm 2024.
+3. Nạp `DIM_STORE`, `DIM_PRODUCT` và `DIM_VENDOR` từ staging.
+4. Dùng Lookup lấy `date_key`, `store_key`, `product_key`, `vendor_key` rồi nạp `FACT_LIQUOR_SALES`.
+
+### Lưu ý chạy lại package
+
+Không cần chạy lại lệnh `CREATE TABLE` nếu các bảng đã tồn tại. Khi thực hiện full load, cần xóa dữ liệu staging trước khi Foreach chạy để tránh nạp trùng, ví dụ bằng một Execute SQL Task:
+
+```sql
+TRUNCATE TABLE stg.LiquorSalesRaw;
+```
