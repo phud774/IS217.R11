@@ -217,10 +217,27 @@ Kết quả xác nhận dữ liệu đã được nạp đủ, không mất dòn
 
 ### Bước ETL tiếp theo
 
-1. Thêm Execute SQL Task `Truncate Staging` trước Foreach Loop để package có thể chạy lại mà không tạo dữ liệu trùng.
-2. Nạp `DIM_DATE` với đầy đủ 366 ngày của năm 2024.
-3. Nạp `DIM_STORE`, `DIM_PRODUCT` và `DIM_VENDOR` từ staging.
-4. Dùng Lookup lấy `date_key`, `store_key`, `product_key`, `vendor_key` rồi nạp `FACT_LIQUOR_SALES`.
+Control Flow đã được mở rộng thành:
+
+```text
+Truncate Staging
+        |
+        v
+Foreach Loop: 5 CSV -> stg.LiquorSalesRaw
+        |
+        v
+Load DIM_DATE
+        |
+        v
+Load DIM_STORE (đang cấu hình)
+```
+
+- Đã thêm Execute SQL Task `Truncate Staging` trước Foreach Loop để package có thể chạy lại mà không nạp trùng staging.
+- Đã đặt `Load DIM_DATE` bên ngoài Foreach Loop để task chỉ chạy một lần sau khi cả 5 file được nạp. Task sinh đủ lịch từ `2024-01-01` đến `2024-12-31` và tránh chèn trùng bằng `NOT EXISTS`.
+- Đã bắt đầu Data Flow `Load DIM_STORE`: OLE DB Source lấy một bản ghi mới nhất cho mỗi `store_no`, bổ sung thành phố/quận không rỗng và ghi vào `[dbo].[DIM_STORE]`.
+- OLE DB Destination của `DIM_STORE` phải map bốn cột `store_no`, `store_name`, `store_city`, `county_name`; không map `store_key` vì đây là cột `IDENTITY`.
+
+Sau khi hoàn tất mapping cho `DIM_STORE`, kiểm tra kết quả mong đợi là 2.162 cửa hàng. Các bước tiếp theo là nạp `DIM_PRODUCT`, `DIM_VENDOR`, rồi dùng Lookup lấy `date_key`, `store_key`, `product_key`, `vendor_key` trước khi nạp `FACT_LIQUOR_SALES`.
 
 ### Lưu ý chạy lại package
 

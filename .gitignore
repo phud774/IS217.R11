@@ -9,3 +9,14 @@
 *.synctex.gz
 *.toc
 *.vrb
+
+# Visual Studio user state
+.vs/
+**/.vs/
+*.suo
+*.user
+
+# SSIS build artifacts
+**/bin/
+**/obj/
+*.ispac
