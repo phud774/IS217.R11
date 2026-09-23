@@ -74,250 +74,373 @@ stg.LiquorSalesRaw    stg.LiquorSalesReject
 - Không loại trùng ở bước này. Dữ liệu hiện tại có 2.590.975 `invoice_id` khác nhau.
 - Không sử dụng hai cột `state_bottle_cost` và `state_bottle_retail` vì chúng trống hoàn toàn.
 
-## 4. Tạo database và bảng staging
+## 4. Tạo database và toàn bộ bảng ngay trong SSIS
 
-Mở SQL Server Management Studio và kết nối tới SQL Server sẽ được SSIS sử dụng.
+Không cần mở SSMS để chạy script khởi tạo. Toàn bộ lệnh tạo database, drop bảng và tạo lại bảng sẽ được đặt trong các `Execute SQL Task` của package `00_Setup_Database.dtsx`.
 
-### 4.1. Tạo database và schema
+> Package setup có tính phá hủy dữ liệu vì nó drop toàn bộ bảng trước khi tạo lại. Chỉ chạy package này khi muốn khởi tạo hoặc reset hoàn toàn Data Warehouse. Không đặt nó vào lịch ETL chạy hằng ngày.
 
-```sql
-IF DB_ID('IowaLiquorDW') IS NULL
-BEGIN
-    CREATE DATABASE IowaLiquorDW;
-END;
-GO
+### 4.1. Tạo project SSIS và package setup
 
-USE IowaLiquorDW;
-GO
-
-IF SCHEMA_ID('stg') IS NULL
-BEGIN
-    EXEC('CREATE SCHEMA stg');
-END;
-GO
-```
-
-### 4.2. Tạo bảng Raw
-
-```sql
-USE IowaLiquorDW;
-GO
-
-IF OBJECT_ID('stg.LiquorSalesRaw', 'U') IS NULL
-BEGIN
-    CREATE TABLE stg.LiquorSalesRaw
-    (
-        invoice_id        varchar(30)  NULL,
-        ordered_on        varchar(20)  NULL,
-        store_no          varchar(20)  NULL,
-        store_name        varchar(255) NULL,
-        store_city        varchar(100) NULL,
-        county_name       varchar(100) NULL,
-        category_name     varchar(255) NULL,
-        vendor_number     varchar(20)  NULL,
-        vendor_name       varchar(255) NULL,
-        item_no           varchar(30)  NULL,
-        im_desc           varchar(500) NULL,
-        bottle_volume_ml  varchar(30)  NULL,
-        sales_bottles     varchar(30)  NULL,
-        sales_dollars     varchar(50)  NULL,
-        sales_liters      varchar(50)  NULL
-    );
-END;
-GO
-```
-
-### 4.3. Tạo bảng lưu dòng lỗi
-
-```sql
-IF OBJECT_ID('stg.LiquorSalesReject', 'U') IS NULL
-BEGIN
-    CREATE TABLE stg.LiquorSalesReject
-    (
-        reject_id         bigint IDENTITY(1,1) PRIMARY KEY,
-        source_file       varchar(500) NULL,
-        reject_reason     varchar(100) NULL,
-        error_code        int          NULL,
-        error_column      int          NULL,
-
-        invoice_id        varchar(30)  NULL,
-        ordered_on        varchar(20)  NULL,
-        store_no          varchar(20)  NULL,
-        store_name        varchar(255) NULL,
-        store_city        varchar(100) NULL,
-        county_name       varchar(100) NULL,
-        category_name     varchar(255) NULL,
-        vendor_number     varchar(20)  NULL,
-        vendor_name       varchar(255) NULL,
-        item_no           varchar(30)  NULL,
-        im_desc           varchar(500) NULL,
-        bottle_volume_ml  varchar(30)  NULL,
-        sales_bottles     varchar(30)  NULL,
-        sales_dollars     varchar(50)  NULL,
-        sales_liters      varchar(50)  NULL,
-
-        rejected_at       datetime2 NOT NULL
-            CONSTRAINT DF_LiquorSalesReject_rejected_at
-            DEFAULT SYSDATETIME()
-    );
-END;
-GO
-```
-
-### 4.4. Tạo các bảng Dimension
-
-Các bảng Dimension có thể được tạo ngay từ đầu để hoàn thiện cấu trúc database. Tuy nhiên, package `Load_Raw_SSIS.dtsx` trong tài liệu này chưa nạp dữ liệu vào các bảng đó.
-
-#### 4.4.1. Tạo `DIM_DATE`
-
-```sql
-IF OBJECT_ID('dbo.DIM_DATE', 'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.DIM_DATE
-    (
-        date_key          int         NOT NULL,
-        ordered_on        date        NOT NULL,
-        day_number        tinyint     NOT NULL,
-        month_number      tinyint     NOT NULL,
-        month_name        varchar(20) NOT NULL,
-        quarter_number    tinyint     NOT NULL,
-        year_number       smallint    NOT NULL,
-
-        CONSTRAINT PK_DIM_DATE
-            PRIMARY KEY (date_key),
-
-        CONSTRAINT UQ_DIM_DATE_ordered_on
-            UNIQUE (ordered_on)
-    );
-END;
-GO
-```
-
-Quy ước `date_key` sử dụng định dạng số `YYYYMMDD`. Ví dụ ngày `2024-01-31` có `date_key = 20240131`.
-
-#### 4.4.2. Tạo `DIM_STORE`
-
-```sql
-IF OBJECT_ID('dbo.DIM_STORE', 'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.DIM_STORE
-    (
-        store_key      int IDENTITY(1,1) NOT NULL,
-        store_no       varchar(20)       NOT NULL,
-        store_name     varchar(255)      NULL,
-        store_city     varchar(100)      NULL,
-        county_name    varchar(100)      NULL,
-
-        CONSTRAINT PK_DIM_STORE
-            PRIMARY KEY (store_key),
-
-        CONSTRAINT UQ_DIM_STORE_store_no
-            UNIQUE (store_no)
-    );
-END;
-GO
-```
-
-`store_key` là surrogate key do SQL Server tự sinh. Khi nạp Dimension sau này, không ánh xạ dữ liệu nguồn vào cột này.
-
-Trong Raw, một `store_no` vẫn có thể xuất hiện nhiều lần hoặc đi cùng nhiều `store_name`. Ràng buộc `UNIQUE (store_no)` chỉ được kiểm tra khi dữ liệu được đưa vào `DIM_STORE`. Trước bước đó cần chọn một bản ghi đại diện, chẳng hạn thông tin mới nhất theo `ordered_on`, hoặc triển khai SCD Type 2 nếu cần lưu lịch sử.
-
-#### 4.4.3. Tạo `DIM_PRODUCT`
-
-```sql
-IF OBJECT_ID('dbo.DIM_PRODUCT', 'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.DIM_PRODUCT
-    (
-        product_key       int IDENTITY(1,1) NOT NULL,
-        item_no           varchar(30)       NOT NULL,
-        im_desc           varchar(500)      NULL,
-        bottle_volume_ml  int               NULL,
-        category_name     varchar(255)      NULL,
-
-        CONSTRAINT PK_DIM_PRODUCT
-            PRIMARY KEY (product_key),
-
-        CONSTRAINT UQ_DIM_PRODUCT_item_no
-            UNIQUE (item_no)
-    );
-END;
-GO
-```
-
-Tài liệu này dùng tên `product_key` để thống nhất với bảng `DIM_PRODUCT`. Nếu DBML đang dùng `item_key`, cần đổi DBML sang `product_key` trước khi tạo bảng Fact.
-
-#### 4.4.4. Tạo `DIM_VENDOR`
-
-```sql
-IF OBJECT_ID('dbo.DIM_VENDOR', 'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.DIM_VENDOR
-    (
-        vendor_key     int IDENTITY(1,1) NOT NULL,
-        vendor_number  varchar(20)       NOT NULL,
-        vendor_name    varchar(255)      NULL,
-
-        CONSTRAINT PK_DIM_VENDOR
-            PRIMARY KEY (vendor_key),
-
-        CONSTRAINT UQ_DIM_VENDOR_vendor_number
-            UNIQUE (vendor_number)
-    );
-END;
-GO
-```
-
-#### 4.4.5. Chạy toàn bộ lệnh Dimension
-
-Các câu lệnh sử dụng `IF OBJECT_ID(...) IS NULL`, vì vậy có thể chạy lại mà không tạo trùng bảng. Chúng không xóa và không ghi đè dữ liệu trong bảng đã tồn tại.
-
-### 4.5. Kiểm tra các bảng đã tạo
-
-```sql
-SELECT
-    SCHEMA_NAME(schema_id) AS schema_name,
-    name AS table_name
-FROM sys.tables
-WHERE object_id IN
-(
-    OBJECT_ID('stg.LiquorSalesRaw'),
-    OBJECT_ID('stg.LiquorSalesReject'),
-    OBJECT_ID('dbo.DIM_DATE'),
-    OBJECT_ID('dbo.DIM_STORE'),
-    OBJECT_ID('dbo.DIM_PRODUCT'),
-    OBJECT_ID('dbo.DIM_VENDOR')
-);
-```
-
-Kết quả phải có sáu bảng:
-
-```text
-stg.LiquorSalesRaw
-stg.LiquorSalesReject
-dbo.DIM_DATE
-dbo.DIM_STORE
-dbo.DIM_PRODUCT
-dbo.DIM_VENDOR
-```
-
-## 5. Tạo project và package SSIS
-
-Nếu chưa có project SSIS mới:
+Nếu chưa có project SSIS:
 
 1. Mở Visual Studio.
 2. Chọn `Create a new project`.
 3. Chọn `Integration Services Project`.
-4. Đặt tên project, ví dụ `IS217_ETL`.
-5. Chọn thư mục dự án `C:\coding_space\study\IS217`.
+4. Đặt tên project là `IS217_ETL`.
+5. Chọn thư mục `C:\coding_space\study\IS217`.
 
 Trong `Solution Explorer`:
 
 1. Nhấn phải chuột vào `SSIS Packages`.
 2. Chọn `New SSIS Package`.
-3. Đổi tên package thành `Load_Raw_SSIS.dtsx`.
+3. Đổi tên package thành `00_Setup_Database.dtsx`.
+4. Đặt `DelayValidation = True` cho package.
+5. Giữ `TransactionOption = Supported` hoặc `NotSupported`; không đặt package tạo database trong transaction bắt buộc.
 
-Không cần sử dụng package cũ và không cần gọi Python từ Execute Process Task.
+### 4.2. Tạo connection tới database `master`
+
+Trong vùng `Connection Managers`, tạo một OLE DB Connection Manager tên:
+
+```text
+CM_Master
+```
+
+Cấu hình:
+
+| Thuộc tính | Giá trị |
+|---|---|
+| Provider | Microsoft OLE DB Driver 19 for SQL Server |
+| Server | SQL Server instance đang sử dụng, ví dụ `LAPTOP-UBHQJIPO\IS217SQL` |
+| Authentication | Windows Authentication |
+| Database | `master` |
+| Trust Server Certificate | `True` nếu môi trường local yêu cầu |
+
+Tất cả Execute SQL Task trong package setup sử dụng `CM_Master`. Các task tạo bảng sẽ bắt đầu bằng `USE IowaLiquorDW;` để chuyển đúng database.
+
+### 4.3. Task 01 - Tạo database nếu chưa tồn tại
+
+Thêm `Execute SQL Task`, đổi tên thành:
+
+```text
+01 - Create Database If Missing
+```
+
+Cấu hình:
+
+```text
+Connection      = CM_Master
+SQLSourceType   = Direct input
+ResultSet       = None
+DelayValidation = True
+```
+
+SQL statement:
+
+```sql
+IF DB_ID('IowaLiquorDW') IS NULL
+BEGIN
+    EXEC('CREATE DATABASE IowaLiquorDW');
+END;
+```
+
+### 4.4. Task 02 - Drop các bảng cũ
+
+Thêm Execute SQL Task tên:
+
+```text
+02 - Drop Existing Tables
+```
+
+Nối mũi tên xanh từ task 01 tới task 02. Chọn `CM_Master` và nhập:
+
+```sql
+USE IowaLiquorDW;
+
+-- Fact phải được drop trước vì đang tham chiếu các Dimension.
+DROP TABLE IF EXISTS dbo.FACT_LIQUOR_SALES;
+
+DROP TABLE IF EXISTS dbo.DIM_VENDOR;
+DROP TABLE IF EXISTS dbo.DIM_PRODUCT;
+DROP TABLE IF EXISTS dbo.DIM_STORE;
+DROP TABLE IF EXISTS dbo.DIM_DATE;
+
+DROP TABLE IF EXISTS stg.LiquorSalesReject;
+DROP TABLE IF EXISTS stg.LiquorSalesRaw;
+```
+
+Không đổi thứ tự để drop Dimension trước Fact, vì khóa ngoại từ Fact có thể làm lệnh thất bại.
+
+### 4.5. Task 03 - Tạo schema staging, Raw và Reject
+
+Thêm Execute SQL Task tên:
+
+```text
+03 - Create Staging Tables
+```
+
+Nối từ task 02 và nhập:
+
+```sql
+USE IowaLiquorDW;
+
+IF SCHEMA_ID('stg') IS NULL
+BEGIN
+    EXEC('CREATE SCHEMA stg');
+END;
+
+CREATE TABLE stg.LiquorSalesRaw
+(
+    invoice_id        varchar(30)  NULL,
+    ordered_on        varchar(20)  NULL,
+    store_no          varchar(20)  NULL,
+    store_name        varchar(255) NULL,
+    store_city        varchar(100) NULL,
+    county_name       varchar(100) NULL,
+    category_name     varchar(255) NULL,
+    vendor_number     varchar(20)  NULL,
+    vendor_name       varchar(255) NULL,
+    item_no           varchar(30)  NULL,
+    im_desc           varchar(500) NULL,
+    bottle_volume_ml  varchar(30)  NULL,
+    sales_bottles     varchar(30)  NULL,
+    sales_dollars     varchar(50)  NULL,
+    sales_liters      varchar(50)  NULL
+);
+
+CREATE TABLE stg.LiquorSalesReject
+(
+    reject_id         bigint IDENTITY(1,1) NOT NULL,
+    source_file       varchar(500) NULL,
+    reject_reason     varchar(100) NULL,
+    error_code        int          NULL,
+    error_column      int          NULL,
+
+    invoice_id        varchar(30)  NULL,
+    ordered_on        varchar(20)  NULL,
+    store_no          varchar(20)  NULL,
+    store_name        varchar(255) NULL,
+    store_city        varchar(100) NULL,
+    county_name       varchar(100) NULL,
+    category_name     varchar(255) NULL,
+    vendor_number     varchar(20)  NULL,
+    vendor_name       varchar(255) NULL,
+    item_no           varchar(30)  NULL,
+    im_desc           varchar(500) NULL,
+    bottle_volume_ml  varchar(30)  NULL,
+    sales_bottles     varchar(30)  NULL,
+    sales_dollars     varchar(50)  NULL,
+    sales_liters      varchar(50)  NULL,
+
+    rejected_at       datetime2 NOT NULL
+        CONSTRAINT DF_LiquorSalesReject_rejected_at
+        DEFAULT SYSDATETIME(),
+
+    CONSTRAINT PK_LiquorSalesReject
+        PRIMARY KEY (reject_id)
+);
+```
+
+### 4.6. Task 04 - Tạo các bảng Dimension
+
+Thêm Execute SQL Task tên:
+
+```text
+04 - Create Dimension Tables
+```
+
+Nối từ task 03 và nhập:
+
+```sql
+USE IowaLiquorDW;
+
+CREATE TABLE dbo.DIM_DATE
+(
+    date_key          int         NOT NULL,
+    ordered_on        date        NOT NULL,
+    day_number        tinyint     NOT NULL,
+    month_number      tinyint     NOT NULL,
+    month_name        varchar(20) NOT NULL,
+    quarter_number    tinyint     NOT NULL,
+    year_number       smallint    NOT NULL,
+
+    CONSTRAINT PK_DIM_DATE
+        PRIMARY KEY (date_key),
+
+    CONSTRAINT UQ_DIM_DATE_ordered_on
+        UNIQUE (ordered_on)
+);
+
+CREATE TABLE dbo.DIM_STORE
+(
+    store_key      int IDENTITY(1,1) NOT NULL,
+    store_no       varchar(20)       NOT NULL,
+    store_name     varchar(255)      NULL,
+    store_city     varchar(100)      NULL,
+    county_name    varchar(100)      NULL,
+
+    CONSTRAINT PK_DIM_STORE
+        PRIMARY KEY (store_key),
+
+    CONSTRAINT UQ_DIM_STORE_store_no
+        UNIQUE (store_no)
+);
+
+CREATE TABLE dbo.DIM_PRODUCT
+(
+    product_key       int IDENTITY(1,1) NOT NULL,
+    item_no           varchar(30)       NOT NULL,
+    im_desc           varchar(500)      NULL,
+    bottle_volume_ml  int               NULL,
+    category_name     varchar(255)      NULL,
+
+    CONSTRAINT PK_DIM_PRODUCT
+        PRIMARY KEY (product_key),
+
+    CONSTRAINT UQ_DIM_PRODUCT_item_no
+        UNIQUE (item_no)
+);
+
+CREATE TABLE dbo.DIM_VENDOR
+(
+    vendor_key     int IDENTITY(1,1) NOT NULL,
+    vendor_number  varchar(20)       NOT NULL,
+    vendor_name    varchar(255)      NULL,
+
+    CONSTRAINT PK_DIM_VENDOR
+        PRIMARY KEY (vendor_key),
+
+    CONSTRAINT UQ_DIM_VENDOR_vendor_number
+        UNIQUE (vendor_number)
+);
+```
+
+Quy ước `date_key` là số `YYYYMMDD`, ví dụ `2024-01-31` tương ứng `20240131`. Các cột `store_key`, `product_key` và `vendor_key` là surrogate key được SQL Server tự sinh.
+
+Các ràng buộc `UNIQUE` chỉ ảnh hưởng khi nạp dữ liệu vào Dimension, không ảnh hưởng bước nạp Raw. Trước khi nạp `DIM_STORE` hoặc `DIM_PRODUCT`, cần xử lý trường hợp một mã có nhiều tên hoặc thuộc tính.
+
+### 4.7. Task 05 - Tạo bảng Fact
+
+Thêm Execute SQL Task tên:
+
+```text
+05 - Create Fact Table
+```
+
+Nối từ task 04 và nhập:
+
+```sql
+USE IowaLiquorDW;
+
+CREATE TABLE dbo.FACT_LIQUOR_SALES
+(
+    sales_key       bigint IDENTITY(1,1) NOT NULL,
+    invoice_id      varchar(30)           NOT NULL,
+
+    date_key        int                   NOT NULL,
+    store_key       int                   NOT NULL,
+    product_key     int                   NOT NULL,
+    vendor_key      int                   NOT NULL,
+
+    sales_bottles   int                   NOT NULL,
+    sales_dollars   decimal(19,2)         NOT NULL,
+    sales_liters    decimal(19,3)         NOT NULL,
+
+    CONSTRAINT PK_FACT_LIQUOR_SALES
+        PRIMARY KEY (sales_key),
+
+    CONSTRAINT UQ_FACT_LIQUOR_SALES_invoice
+        UNIQUE (invoice_id),
+
+    CONSTRAINT FK_FACT_DATE
+        FOREIGN KEY (date_key)
+        REFERENCES dbo.DIM_DATE(date_key),
+
+    CONSTRAINT FK_FACT_STORE
+        FOREIGN KEY (store_key)
+        REFERENCES dbo.DIM_STORE(store_key),
+
+    CONSTRAINT FK_FACT_PRODUCT
+        FOREIGN KEY (product_key)
+        REFERENCES dbo.DIM_PRODUCT(product_key),
+
+    CONSTRAINT FK_FACT_VENDOR
+        FOREIGN KEY (vendor_key)
+        REFERENCES dbo.DIM_VENDOR(vendor_key)
+);
+```
+
+### 4.8. Task 06 - Kiểm tra schema tự động
+
+Thêm Execute SQL Task tên:
+
+```text
+06 - Verify Created Tables
+```
+
+Nối từ task 05 và nhập:
+
+```sql
+USE IowaLiquorDW;
+
+IF OBJECT_ID('stg.LiquorSalesRaw', 'U') IS NULL
+   OR OBJECT_ID('stg.LiquorSalesReject', 'U') IS NULL
+   OR OBJECT_ID('dbo.DIM_DATE', 'U') IS NULL
+   OR OBJECT_ID('dbo.DIM_STORE', 'U') IS NULL
+   OR OBJECT_ID('dbo.DIM_PRODUCT', 'U') IS NULL
+   OR OBJECT_ID('dbo.DIM_VENDOR', 'U') IS NULL
+   OR OBJECT_ID('dbo.FACT_LIQUOR_SALES', 'U') IS NULL
+BEGIN
+    THROW 50001, 'Database schema was not created completely.', 1;
+END;
+```
+
+Nếu thiếu bất kỳ bảng nào, task sẽ thất bại và package không báo thành công sai.
+
+Control Flow hoàn chỉnh của package setup:
+
+```text
+01 - Create Database If Missing
+              |
+              v
+02 - Drop Existing Tables
+              |
+              v
+03 - Create Staging Tables
+              |
+              v
+04 - Create Dimension Tables
+              |
+              v
+05 - Create Fact Table
+              |
+              v
+06 - Verify Created Tables
+```
+
+### 4.9. Không dùng `GO` trong Execute SQL Task
+
+Không đặt `GO` vào SQL Statement của Execute SQL Task. `GO` là dấu phân cách batch của SSMS và `sqlcmd`, không phải câu lệnh T-SQL mà OLE DB gửi cho SQL Server.
+
+Nếu cần tách batch, hãy tạo nhiều Execute SQL Task như cấu trúc ở trên.
+
+## 5. Tạo package nạp Raw
+
+Sau khi package setup chạy thành công, tạo package thứ hai:
+
+1. Nhấn phải chuột vào `SSIS Packages`.
+2. Chọn `New SSIS Package`.
+3. Đổi tên thành `01_Load_Raw_SSIS.dtsx`.
+4. Đặt `DelayValidation = True`.
+
+Hai package có nhiệm vụ khác nhau:
+
+| Package | Khi nào chạy |
+|---|---|
+| `00_Setup_Database.dtsx` | Chỉ chạy khi cần tạo mới hoặc reset toàn bộ Data Warehouse |
+| `01_Load_Raw_SSIS.dtsx` | Chạy để làm sạch CSV và nạp lại Raw |
+
+Không cần gọi Python hoặc chạy script SQL thủ công bên ngoài SSIS.
 
 ## 6. Tạo biến package
 
@@ -817,7 +940,14 @@ Không bật `Table lock` cho hai destination Reject.
 
 ## 12. Chạy package
 
-Trước khi chạy, kiểm tra:
+Chạy hai package theo thứ tự sau:
+
+1. Nhấn phải chuột vào `00_Setup_Database.dtsx` và chọn `Execute Package`. Chỉ thực hiện bước này khi cần tạo mới hoặc reset toàn bộ schema.
+2. Sau khi toàn bộ task setup chuyển màu xanh, nhấn phải chuột vào `01_Load_Raw_SSIS.dtsx` và chọn `Execute Package`.
+
+Không chạy lại package setup sau khi đã nạp Dimension hoặc Fact, trừ khi chấp nhận xóa toàn bộ dữ liệu đó.
+
+Trước khi chạy package Load Raw, kiểm tra:
 
 - Thư mục `data` có đủ 5 file CSV.
 - Flat File Connection Manager nhận đủ 23 cột.
@@ -828,7 +958,7 @@ Trước khi chạy, kiểm tra:
 - Các error output của Data Conversion dùng `Redirect row`.
 - Không có task Dimension hoặc Fact trong package này.
 
-Nhấn `F5` để chạy package.
+Nhấn `F5` nếu `01_Load_Raw_SSIS.dtsx` đang được chọn làm startup package.
 
 Ở vòng lặp cuối, Data Flow có thể chỉ hiển thị `585.514` dòng. Đây là số dòng của file thứ năm, không phải tổng số dòng của cả năm file.
 
@@ -960,4 +1090,4 @@ stg.LiquorSalesRaw
 dbo.FACT_LIQUOR_SALES
 ```
 
-Trước khi nạp Dimension và Fact, cần thống nhất tên khóa sản phẩm giữa DBML và SQL. DBML hiện dùng `item_key`, trong khi script SQL hiện tại dùng `product_key`. Nên chọn một tên duy nhất; `product_key` phù hợp với tên bảng `DIM_PRODUCT`.
+Trước khi nạp dữ liệu vào Dimension và Fact, cần thống nhất tên khóa sản phẩm giữa DBML và package setup. DBML hiện dùng `item_key`, trong khi bảng được tạo bởi `00_Setup_Database.dtsx` dùng `product_key`. Nên cập nhật DBML sang `product_key` để phù hợp với tên bảng `DIM_PRODUCT`.
