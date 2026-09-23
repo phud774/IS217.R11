@@ -10,10 +10,8 @@ SSIS sẽ thực hiện toàn bộ các công việc sau:
 2. Đọc đủ 23 cột nguồn dưới dạng chuỗi.
 3. Loại khoảng trắng thừa và đổi chuỗi rỗng thành `NULL` khi phù hợp.
 4. Chọn 15 cột cần thiết cho mô hình sao.
-5. Kiểm tra các trường bắt buộc.
-6. Kiểm tra định dạng ngày và số.
-7. Nạp dòng hợp lệ vào `stg.LiquorSalesRaw`.
-8. Nạp dòng không hợp lệ vào `stg.LiquorSalesReject`.
+5. Kiểm tra định dạng ngày và số.
+6. Nạp dữ liệu vào `stg.LiquorSalesRaw`.
 
 Mô hình sao đích được mô tả trong:
 
@@ -43,20 +41,11 @@ Derived Column
 - Tạo 15 cột sạch
           |
           v
-Conditional Split
-- Thiếu trường bắt buộc -> Reject
-- Hợp lệ -> kiểm tra kiểu dữ liệu
-          |
-          v
 Data Conversion
 Kiểm tra date, int và decimal
-       +--+------------------+
-       |                     |
-       v                     v
-Nạp thành công          Lỗi chuyển đổi
-       |                     |
-       v                     v
-stg.LiquorSalesRaw    stg.LiquorSalesReject
+          |
+          v
+stg.LiquorSalesRaw
 ```
 
 > Bảng Raw vẫn dùng các cột `varchar`. Data Conversion chỉ được dùng để kiểm tra dữ liệu có chuyển được sang ngày và số hay không. Việc nạp các bảng Dimension và Fact mới sử dụng kiểu dữ liệu chính thức.
@@ -165,13 +154,12 @@ DROP TABLE IF EXISTS dbo.DIM_PRODUCT;
 DROP TABLE IF EXISTS dbo.DIM_STORE;
 DROP TABLE IF EXISTS dbo.DIM_DATE;
 
-DROP TABLE IF EXISTS stg.LiquorSalesReject;
 DROP TABLE IF EXISTS stg.LiquorSalesRaw;
 ```
 
 Không đổi thứ tự để drop Dimension trước Fact, vì khóa ngoại từ Fact có thể làm lệnh thất bại.
 
-### 4.5. Task 03 - Tạo schema staging, Raw và Reject
+### 4.5. Task 03 - Tạo schema staging và Raw
 
 Thêm Execute SQL Task tên:
 
@@ -206,38 +194,6 @@ CREATE TABLE stg.LiquorSalesRaw
     sales_bottles     varchar(30)  NULL,
     sales_dollars     varchar(50)  NULL,
     sales_liters      varchar(50)  NULL
-);
-
-CREATE TABLE stg.LiquorSalesReject
-(
-    reject_id         bigint IDENTITY(1,1) NOT NULL,
-    source_file       varchar(500) NULL,
-    reject_reason     varchar(100) NULL,
-    error_code        int          NULL,
-    error_column      int          NULL,
-
-    invoice_id        varchar(30)  NULL,
-    ordered_on        varchar(20)  NULL,
-    store_no          varchar(20)  NULL,
-    store_name        varchar(255) NULL,
-    store_city        varchar(100) NULL,
-    county_name       varchar(100) NULL,
-    category_name     varchar(255) NULL,
-    vendor_number     varchar(20)  NULL,
-    vendor_name       varchar(255) NULL,
-    item_no           varchar(30)  NULL,
-    im_desc           varchar(500) NULL,
-    bottle_volume_ml  varchar(30)  NULL,
-    sales_bottles     varchar(30)  NULL,
-    sales_dollars     varchar(50)  NULL,
-    sales_liters      varchar(50)  NULL,
-
-    rejected_at       datetime2 NOT NULL
-        CONSTRAINT DF_LiquorSalesReject_rejected_at
-        DEFAULT SYSDATETIME(),
-
-    CONSTRAINT PK_LiquorSalesReject
-        PRIMARY KEY (reject_id)
 );
 ```
 
@@ -384,7 +340,6 @@ Nối từ task 05 và nhập:
 USE IowaLiquorDW;
 
 IF OBJECT_ID('stg.LiquorSalesRaw', 'U') IS NULL
-   OR OBJECT_ID('stg.LiquorSalesReject', 'U') IS NULL
    OR OBJECT_ID('dbo.DIM_DATE', 'U') IS NULL
    OR OBJECT_ID('dbo.DIM_STORE', 'U') IS NULL
    OR OBJECT_ID('dbo.DIM_PRODUCT', 'U') IS NULL
@@ -629,7 +584,6 @@ SQLSourceType = Direct input
 SQL statement:
 
 ```sql
-TRUNCATE TABLE stg.LiquorSalesReject;
 TRUNCATE TABLE stg.LiquorSalesRaw;
 ```
 
@@ -688,18 +642,10 @@ SRC - Original CSV
 DRV - Clean Columns
         |
         v
-CS - Validate Required Fields
+DC - Validate Data Types
         |
-        +-- Reject_MissingRequired --> DST - Reject Missing
-        |
-        +-- ReadyForTypeCheck
-                    |
-                    v
-           DC - Validate Data Types
-                    |
-                    +-- Success --> DST - LiquorSalesRaw
-                    |
-                    +-- Error ----> DST - Reject Conversion
+        v
+DST - LiquorSalesRaw
 ```
 
 ### 10.1. Flat File Source
@@ -842,7 +788,7 @@ ISNULL(invoice_id)
 : (DT_STR,30,65001)TRIM(invoice_id)
 ```
 
-Nếu nguồn là `NULL`, expression trả về chuỗi rỗng. Nếu nguồn có dữ liệu, expression loại khoảng trắng đầu và cuối. Sau đó Conditional Split sẽ chuyển dòng sang Reject nếu kết quả vẫn rỗng.
+Nếu nguồn là `NULL`, expression trả về chuỗi rỗng. Nếu nguồn có dữ liệu, expression loại khoảng trắng đầu và cuối.
 
 Không chuyển `store_no`, `vendor_number` hoặc `item_no` sang số vì các mã này có thể có số `0` ở đầu.
 
@@ -920,23 +866,7 @@ Tạo lần lượt các dòng sau trong `Derived Column Transformation Editor`.
 | `clean_sales_dollars` | `sales_dollars` | 50 |
 | `clean_sales_liters` | `sales_liters` | 50 |
 
-#### 10.2.5. Thêm tên file nguồn
-
-Thêm dòng thứ 16 để biết mỗi bản ghi đến từ file nào:
-
-| Derived Column Name | Derived Column | Expression |
-|---|---|---|
-| `clean_source_file` | `<add as new column>` | `(DT_STR,500,65001)@[User::FilePath]` |
-
-Biến `User::FilePath` được Foreach Loop cập nhật trước mỗi vòng lặp. Ví dụ giá trị đầu ra:
-
-```text
-C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv
-```
-
-`clean_source_file` chỉ được map vào bảng Reject để truy vết lỗi; bảng Raw hiện tại không có cột `source_file`.
-
-#### 10.2.6. Không cần xóa tám cột không sử dụng
+#### 10.2.5. Không cần xóa tám cột không sử dụng
 
 Derived Column không có nhiệm vụ xóa cột. Không tạo cột `clean_*` cho tám cột sau:
 
@@ -953,11 +883,11 @@ sales_gallons
 
 Các cột nguồn này vẫn đi qua pipeline nhưng sẽ tự động bị bỏ khi không được map vào OLE DB Destination.
 
-#### 10.2.7. Kiểm tra Derived Column bằng Data Viewer
+#### 10.2.6. Kiểm tra Derived Column bằng Data Viewer
 
-Trước khi nối sang Conditional Split, nên kiểm tra kết quả:
+Trước khi nối sang Data Conversion, nên kiểm tra kết quả:
 
-1. Nối `DRV - Clean Columns` với `CS - Validate Required Fields`.
+1. Nối `DRV - Clean Columns` với `DC - Validate Data Types`.
 2. Nhấn phải chuột vào đường nối màu xanh.
 3. Chọn `Enable Data Viewer` hoặc `Data Viewers` -> `Add` -> `Grid` tùy phiên bản Visual Studio.
 4. Chạy package với một file mẫu.
@@ -977,11 +907,10 @@ Kết quả đúng khi:
 - Mã `065` vẫn là `065`, không trở thành `65`.
 - `store_city` và `county_name` trống được hiển thị là NULL.
 - Các giá trị âm như `-12` hoặc `-144.00` vẫn được giữ.
-- Cột `clean_source_file` chứa đúng file đang được Foreach Loop xử lý.
 
 Sau khi kiểm tra xong, có thể tắt Data Viewer để package chạy nhanh hơn với toàn bộ 2.590.975 dòng.
 
-#### 10.2.8. Lỗi thường gặp
+#### 10.2.7. Lỗi thường gặp
 
 | Hiện tượng | Nguyên nhân và cách xử lý |
 |---|---|
@@ -992,45 +921,11 @@ Sau khi kiểm tra xong, có thể tắt Data Viewer để package chạy nhanh 
 | Chuỗi rỗng không thành NULL | Chỉ áp dụng expression NULL dành cho `store_city` và `county_name` |
 | Khoảng trắng giữa tên vẫn còn | `TRIM` chỉ bỏ khoảng trắng đầu/cuối; không tự sửa khoảng trắng bên trong tên |
 
-Sau khi bấm `OK`, output của `DRV - Clean Columns` phải có 23 cột nguồn, 15 cột sạch và một cột `clean_source_file`. Bước tiếp theo là Conditional Split kiểm tra trường bắt buộc.
+Sau khi bấm `OK`, output của `DRV - Clean Columns` phải có 23 cột nguồn và 15 cột sạch. Bước tiếp theo là Data Conversion kiểm tra định dạng ngày và số.
 
-### 10.3. Conditional Split kiểm tra trường bắt buộc
+### 10.3. Data Conversion kiểm tra ngày và số
 
-Thêm `Conditional Split` và đổi tên:
-
-```text
-CS - Validate Required Fields
-```
-
-Tạo output `Reject_MissingRequired` với expression:
-
-```text
-ISNULL(clean_invoice_id) || LEN(clean_invoice_id) == 0
-|| ISNULL(clean_ordered_on) || LEN(clean_ordered_on) == 0
-|| ISNULL(clean_store_no) || LEN(clean_store_no) == 0
-|| ISNULL(clean_store_name) || LEN(clean_store_name) == 0
-|| ISNULL(clean_category_name) || LEN(clean_category_name) == 0
-|| ISNULL(clean_vendor_number) || LEN(clean_vendor_number) == 0
-|| ISNULL(clean_vendor_name) || LEN(clean_vendor_name) == 0
-|| ISNULL(clean_item_no) || LEN(clean_item_no) == 0
-|| ISNULL(clean_im_desc) || LEN(clean_im_desc) == 0
-|| ISNULL(clean_bottle_volume_ml) || LEN(clean_bottle_volume_ml) == 0
-|| ISNULL(clean_sales_bottles) || LEN(clean_sales_bottles) == 0
-|| ISNULL(clean_sales_dollars) || LEN(clean_sales_dollars) == 0
-|| ISNULL(clean_sales_liters) || LEN(clean_sales_liters) == 0
-```
-
-Đổi tên default output thành:
-
-```text
-ReadyForTypeCheck
-```
-
-Không đưa `clean_store_city` và `clean_county_name` vào điều kiện Reject vì hai trường này được phép thiếu.
-
-### 10.4. Data Conversion kiểm tra ngày và số
-
-Nối output `ReadyForTypeCheck` vào `Data Conversion`, sau đó đổi tên component thành:
+Nối output của `DRV - Clean Columns` vào `Data Conversion`, sau đó đổi tên component thành:
 
 ```text
 DC - Validate Data Types
@@ -1049,9 +944,11 @@ Cấu hình:
 Trong `Configure Error Output`, đặt cho các cột:
 
 ```text
-Error      = Redirect row
-Truncation = Redirect row
+Error      = Fail component
+Truncation = Fail component
 ```
+
+Không sử dụng `Ignore failure`. Nếu dữ liệu ngày hoặc số sai định dạng, package phải dừng để lỗi được phát hiện thay vì âm thầm bỏ qua dữ liệu.
 
 Nếu có thuộc tính `LocaleID` trên Data Flow hoặc component, đặt:
 
@@ -1061,7 +958,7 @@ Nếu có thuộc tính `LocaleID` trên Data Flow hoặc component, đặt:
 
 Dữ liệu nguồn dùng ngày `YYYY-MM-DD` và dấu chấm cho số thập phân.
 
-### 10.5. OLE DB Destination nạp Raw
+### 10.4. OLE DB Destination nạp Raw
 
 Nối output thành công của Data Conversion vào `OLE DB Destination` và đặt tên:
 
@@ -1109,71 +1006,7 @@ AlwaysUseDefaultCodePage = True
 DefaultCodePage = 65001
 ```
 
-## 11. Xử lý dòng Reject
-
-### 11.1. Dòng thiếu trường bắt buộc
-
-Từ output `Reject_MissingRequired`, thêm Derived Column tên:
-
-```text
-DRV - Missing Reason
-```
-
-Tạo ba cột:
-
-```text
-reject_reason       = (DT_STR,100,65001)"MISSING_REQUIRED_FIELD"
-reject_error_code   = (DT_I4)0
-reject_error_column = (DT_I4)0
-```
-
-Nối tới `OLE DB Destination` tên `DST - Reject Missing` và chọn bảng:
-
-```text
-[stg].[LiquorSalesReject]
-```
-
-Ánh xạ:
-
-- `clean_source_file` vào `source_file`.
-- `reject_reason` vào `reject_reason`.
-- `reject_error_code` vào `error_code`.
-- `reject_error_column` vào `error_column`.
-- Mười lăm cột `clean_*` vào các cột dữ liệu tương ứng.
-
-### 11.2. Dòng sai kiểu dữ liệu
-
-Kéo mũi tên đỏ từ `DC - Validate Data Types` sang một Derived Column tên:
-
-```text
-DRV - Conversion Reason
-```
-
-Tạo cột:
-
-```text
-reject_reason = (DT_STR,100,65001)"INVALID_DATE_OR_NUMERIC_VALUE"
-```
-
-Nối đến `OLE DB Destination` tên:
-
-```text
-DST - Reject Conversion
-```
-
-Chọn bảng `[stg].[LiquorSalesReject]` và ánh xạ:
-
-| Input | Destination |
-|---|---|
-| `clean_source_file` | `source_file` |
-| `reject_reason` | `reject_reason` |
-| `ErrorCode` | `error_code` |
-| `ErrorColumn` | `error_column` |
-| Các cột `clean_*` | Các cột dữ liệu tương ứng |
-
-Không bật `Table lock` cho hai destination Reject.
-
-## 12. Chạy package
+## 11. Chạy package
 
 Chạy hai package theo thứ tự sau:
 
@@ -1190,16 +1023,16 @@ Trước khi chạy package Load Raw, kiểm tra:
 - `User::FilePath` được map tại index `0` của Foreach Loop.
 - OLE DB Connection Manager trỏ tới database `IowaLiquorDW`.
 - Destination Raw đã map đủ 15 cột.
-- Các error output của Data Conversion dùng `Redirect row`.
+- Các error output của Data Conversion dùng `Fail component`.
 - Không có task Dimension hoặc Fact trong package này.
 
 Nhấn `F5` nếu `01_Load_Raw_SSIS.dtsx` đang được chọn làm startup package.
 
 Ở vòng lặp cuối, Data Flow có thể chỉ hiển thị `585.514` dòng. Đây là số dòng của file thứ năm, không phải tổng số dòng của cả năm file.
 
-## 13. Kiểm tra kết quả
+## 12. Kiểm tra kết quả
 
-### 13.1. Tổng số dòng
+### 12.1. Tổng số dòng
 
 ```sql
 USE IowaLiquorDW;
@@ -1211,9 +1044,6 @@ SELECT
     MIN(TRY_CONVERT(date, ordered_on, 23)) AS first_date,
     MAX(TRY_CONVERT(date, ordered_on, 23)) AS last_date
 FROM stg.LiquorSalesRaw;
-
-SELECT COUNT_BIG(*) AS rejected_rows
-FROM stg.LiquorSalesReject;
 ```
 
 Kết quả mong đợi:
@@ -1224,9 +1054,8 @@ Kết quả mong đợi:
 | `unique_invoice_ids` | 2.590.975 |
 | `first_date` | 2024-01-01 |
 | `last_date` | 2024-12-31 |
-| `rejected_rows` | 0 |
 
-### 13.2. Kiểm tra dữ liệu thiếu vị trí
+### 12.2. Kiểm tra dữ liệu thiếu vị trí
 
 ```sql
 SELECT COUNT_BIG(*) AS missing_location_rows
@@ -1241,7 +1070,7 @@ Kết quả dự kiến:
 422
 ```
 
-### 13.3. Kiểm tra giá trị chưa được TRIM
+### 12.3. Kiểm tra giá trị chưa được TRIM
 
 ```sql
 SELECT COUNT_BIG(*) AS rows_with_outer_spaces
@@ -1258,7 +1087,7 @@ Kết quả mong đợi:
 0
 ```
 
-### 13.4. Kiểm tra dữ liệu số và ngày
+### 12.4. Kiểm tra dữ liệu số và ngày
 
 ```sql
 SELECT
@@ -1291,7 +1120,7 @@ FROM stg.LiquorSalesRaw;
 
 Các giá trị trên phải bằng `0`.
 
-## 14. Tiêu chí hoàn thành bước Raw
+## 13. Tiêu chí hoàn thành bước Raw
 
 Bước Raw hoàn thành khi đáp ứng đủ các điều kiện sau:
 
@@ -1309,7 +1138,7 @@ Bước Raw hoàn thành khi đáp ứng đủ các điều kiện sau:
 - Package chạy lại vẫn cho đúng số dòng nhờ bước `TRUNCATE`.
 - Chưa nạp bất kỳ bảng Dimension hoặc Fact nào.
 
-## 15. Bước tiếp theo
+## 14. Bước tiếp theo
 
 Sau khi hoàn thành và kiểm tra Raw, thứ tự ETL tiếp theo là:
 
