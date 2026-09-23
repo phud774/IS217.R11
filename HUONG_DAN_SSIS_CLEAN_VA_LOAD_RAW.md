@@ -164,7 +164,115 @@ END;
 GO
 ```
 
-### 4.4. Kiểm tra hai bảng
+### 4.4. Tạo các bảng Dimension
+
+Các bảng Dimension có thể được tạo ngay từ đầu để hoàn thiện cấu trúc database. Tuy nhiên, package `Load_Raw_SSIS.dtsx` trong tài liệu này chưa nạp dữ liệu vào các bảng đó.
+
+#### 4.4.1. Tạo `DIM_DATE`
+
+```sql
+IF OBJECT_ID('dbo.DIM_DATE', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.DIM_DATE
+    (
+        date_key          int         NOT NULL,
+        ordered_on        date        NOT NULL,
+        day_number        tinyint     NOT NULL,
+        month_number      tinyint     NOT NULL,
+        month_name        varchar(20) NOT NULL,
+        quarter_number    tinyint     NOT NULL,
+        year_number       smallint    NOT NULL,
+
+        CONSTRAINT PK_DIM_DATE
+            PRIMARY KEY (date_key),
+
+        CONSTRAINT UQ_DIM_DATE_ordered_on
+            UNIQUE (ordered_on)
+    );
+END;
+GO
+```
+
+Quy ước `date_key` sử dụng định dạng số `YYYYMMDD`. Ví dụ ngày `2024-01-31` có `date_key = 20240131`.
+
+#### 4.4.2. Tạo `DIM_STORE`
+
+```sql
+IF OBJECT_ID('dbo.DIM_STORE', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.DIM_STORE
+    (
+        store_key      int IDENTITY(1,1) NOT NULL,
+        store_no       varchar(20)       NOT NULL,
+        store_name     varchar(255)      NULL,
+        store_city     varchar(100)      NULL,
+        county_name    varchar(100)      NULL,
+
+        CONSTRAINT PK_DIM_STORE
+            PRIMARY KEY (store_key),
+
+        CONSTRAINT UQ_DIM_STORE_store_no
+            UNIQUE (store_no)
+    );
+END;
+GO
+```
+
+`store_key` là surrogate key do SQL Server tự sinh. Khi nạp Dimension sau này, không ánh xạ dữ liệu nguồn vào cột này.
+
+Trong Raw, một `store_no` vẫn có thể xuất hiện nhiều lần hoặc đi cùng nhiều `store_name`. Ràng buộc `UNIQUE (store_no)` chỉ được kiểm tra khi dữ liệu được đưa vào `DIM_STORE`. Trước bước đó cần chọn một bản ghi đại diện, chẳng hạn thông tin mới nhất theo `ordered_on`, hoặc triển khai SCD Type 2 nếu cần lưu lịch sử.
+
+#### 4.4.3. Tạo `DIM_PRODUCT`
+
+```sql
+IF OBJECT_ID('dbo.DIM_PRODUCT', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.DIM_PRODUCT
+    (
+        product_key       int IDENTITY(1,1) NOT NULL,
+        item_no           varchar(30)       NOT NULL,
+        im_desc           varchar(500)      NULL,
+        bottle_volume_ml  int               NULL,
+        category_name     varchar(255)      NULL,
+
+        CONSTRAINT PK_DIM_PRODUCT
+            PRIMARY KEY (product_key),
+
+        CONSTRAINT UQ_DIM_PRODUCT_item_no
+            UNIQUE (item_no)
+    );
+END;
+GO
+```
+
+Tài liệu này dùng tên `product_key` để thống nhất với bảng `DIM_PRODUCT`. Nếu DBML đang dùng `item_key`, cần đổi DBML sang `product_key` trước khi tạo bảng Fact.
+
+#### 4.4.4. Tạo `DIM_VENDOR`
+
+```sql
+IF OBJECT_ID('dbo.DIM_VENDOR', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.DIM_VENDOR
+    (
+        vendor_key     int IDENTITY(1,1) NOT NULL,
+        vendor_number  varchar(20)       NOT NULL,
+        vendor_name    varchar(255)      NULL,
+
+        CONSTRAINT PK_DIM_VENDOR
+            PRIMARY KEY (vendor_key),
+
+        CONSTRAINT UQ_DIM_VENDOR_vendor_number
+            UNIQUE (vendor_number)
+    );
+END;
+GO
+```
+
+#### 4.4.5. Chạy toàn bộ lệnh Dimension
+
+Các câu lệnh sử dụng `IF OBJECT_ID(...) IS NULL`, vì vậy có thể chạy lại mà không tạo trùng bảng. Chúng không xóa và không ghi đè dữ liệu trong bảng đã tồn tại.
+
+### 4.5. Kiểm tra các bảng đã tạo
 
 ```sql
 SELECT
@@ -174,15 +282,23 @@ FROM sys.tables
 WHERE object_id IN
 (
     OBJECT_ID('stg.LiquorSalesRaw'),
-    OBJECT_ID('stg.LiquorSalesReject')
+    OBJECT_ID('stg.LiquorSalesReject'),
+    OBJECT_ID('dbo.DIM_DATE'),
+    OBJECT_ID('dbo.DIM_STORE'),
+    OBJECT_ID('dbo.DIM_PRODUCT'),
+    OBJECT_ID('dbo.DIM_VENDOR')
 );
 ```
 
-Kết quả phải có hai bảng:
+Kết quả phải có sáu bảng:
 
 ```text
 stg.LiquorSalesRaw
 stg.LiquorSalesReject
+dbo.DIM_DATE
+dbo.DIM_STORE
+dbo.DIM_PRODUCT
+dbo.DIM_VENDOR
 ```
 
 ## 5. Tạo project và package SSIS
