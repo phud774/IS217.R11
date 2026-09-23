@@ -480,17 +480,39 @@ Thiết lập cơ bản:
 
 `Initial Catalog` của connection phải là `IowaLiquorDW`.
 
-## 8. Tạo Flat File Connection Manager
+## 8. Tạo Flat File Connection Manager ở package scope
 
-Trong `Connection Managers`:
+`User::FilePath` là biến thuộc package `01_Load_Raw_SSIS.dtsx`. Vì vậy Flat File Connection Manager sử dụng biến này cũng phải được tạo bên trong package, không tạo ở project scope.
 
-1. Chọn `New Flat File Connection`.
-2. Đặt tên `FF_Iowa_Source`.
-3. Chọn file mẫu:
+Phân biệt hai vị trí:
+
+```text
+Đúng:
+Mở 01_Load_Raw_SSIS.dtsx
+└── vùng Connection Managers ở dưới package designer
+    └── FF_Iowa_Source_Package
+
+Không dùng cho trường hợp này:
+Solution Explorer
+└── Connection Managers
+    └── FF_Iowa_Source.conmgr
+```
+
+Nếu connection xuất hiện thành file `.conmgr` trong Solution Explorer thì đó là project-level Connection Manager. Project-level Connection Manager không được dùng trực tiếp với package variable `User::FilePath` của Foreach Loop.
+
+Thực hiện như sau:
+
+1. Mở `01_Load_Raw_SSIS.dtsx`.
+2. Tại vùng `Connection Managers` nằm phía dưới package designer, nhấn phải chuột.
+3. Chọn `New Flat File Connection`.
+4. Đặt tên `FF_Iowa_Source_Package`.
+5. Tại ô `File name`, chọn file CSV vật lý làm file mẫu:
 
 ```text
 C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv
 ```
+
+Ở bước này, ô `File name` bắt buộc chứa đường dẫn thật. Không nhập `@[User::FilePath]` vào ô `File name`.
 
 ### 8.1. General
 
@@ -557,21 +579,24 @@ Không để SSIS tự nhận dạng các mã thành số.
 | `sales_liters` | 50 |
 | `sales_gallons` | 50 |
 
-### 8.4. Gắn connection với biến file
+### 8.4. Kiểm tra file mẫu và lưu metadata
 
-Chọn `FF_Iowa_Source`, nhấn `F4` để mở Properties.
+Trước khi gắn connection với biến:
 
-Tại `Expressions`, thêm:
+1. Mở trang `Preview` của Flat File Connection Manager.
+2. Xác nhận Preview hiển thị dữ liệu thật.
+3. Xác nhận trang `Columns` có đúng 23 cột.
+4. Xác nhận trang `Advanced` có đúng tên, kiểu và độ rộng của 23 cột.
+5. Bấm `OK` để lưu Connection Manager.
+6. Nhấn `Ctrl + S` để lưu package.
 
-| Property | Expression |
-|---|---|
-| `ConnectionString` | `@[User::FilePath]` |
-
-Đặt:
+Tại thời điểm này, ConnectionString cơ sở vẫn phải là:
 
 ```text
-DelayValidation = True
+C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv
 ```
+
+Chưa thêm expression ở bước này. Cần cấu hình Flat File Source và tạo output metadata trước, sau đó mới gắn `ConnectionString` với `User::FilePath` tại mục 10.1.1.
 
 ## 9. Xây dựng Control Flow
 
@@ -679,19 +704,78 @@ CS - Validate Required Fields
 
 ### 10.1. Flat File Source
 
-Thêm `Flat File Source` và đổi tên:
+1. Thêm `Flat File Source` và đổi tên:
 
 ```text
 SRC - Original CSV
 ```
 
-Chọn:
+2. Nhấp đúp vào `SRC - Original CSV`.
+3. Trong trang `Connection Manager`, chọn package-level connection:
 
 ```text
-Flat file connection manager = FF_Iowa_Source
+Flat file connection manager = FF_Iowa_Source_Package
 ```
 
-Trong `Columns`, giữ đủ 23 cột. Các cột không dùng sẽ được bỏ bằng cách không ánh xạ vào destination.
+4. Mở trang `Columns` và xác nhận cả Input Column lẫn Output Alias có đủ 23 cột.
+5. Bấm `OK` để Flat File Source tạo output metadata.
+6. Nhấn `Ctrl + S` để lưu package.
+
+Không mở Derived Column trước khi Flat File Source hiển thị đủ 23 cột. Preview thành công ở Connection Manager chưa đủ; Flat File Source cũng phải được chọn đúng Connection Manager và lưu output columns.
+
+Nếu Flat File Source đã được tạo trước khi Connection Manager hoạt động và trang `Columns` vẫn trống:
+
+1. Xóa riêng Flat File Source cũ.
+2. Không xóa `FF_Iowa_Source_Package`.
+3. Tạo Flat File Source mới.
+4. Chọn lại `FF_Iowa_Source_Package`.
+5. Kiểm tra đủ 23 cột và bấm `OK`.
+
+Các cột không dùng sẽ được bỏ bằng cách không ánh xạ chúng vào OLE DB Destination.
+
+#### 10.1.1. Gắn package-level connection với `User::FilePath`
+
+Chỉ thực hiện bước này sau khi Flat File Source đã có đủ 23 output columns:
+
+1. Chọn `FF_Iowa_Source_Package` tại vùng Connection Managers phía dưới package designer.
+2. Nhấn `F4` để mở cửa sổ Properties.
+3. Tại thuộc tính `Expressions`, bấm nút `...`.
+4. Thêm expression:
+
+| Property | Expression |
+|---|---|
+| `ConnectionString` | `@[User::FilePath]` |
+
+5. Bấm `Evaluate Expression`.
+6. Kết quả phải là đường dẫn CSV thật:
+
+```text
+C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv
+```
+
+7. Bấm `OK` và đặt:
+
+```text
+DelayValidation = True
+```
+
+Không nhập chuỗi `@[User::FilePath]` trực tiếp vào ô `File name`. File mẫu vẫn được giữ làm ConnectionString cơ sở để SSIS có thể thiết kế và làm mới metadata; expression chỉ ghi đè đường dẫn khi package chạy.
+
+Luồng hoạt động:
+
+```text
+Lúc thiết kế:
+FF_Iowa_Source_Package đọc part_0001.csv để tạo metadata 23 cột
+
+Lúc chạy:
+Foreach gán file hiện tại vào User::FilePath
+        |
+        v
+Expression cập nhật ConnectionString
+        |
+        v
+Flat File Source đọc file hiện tại
+```
 
 ### 10.2. Derived Column làm sạch
 
