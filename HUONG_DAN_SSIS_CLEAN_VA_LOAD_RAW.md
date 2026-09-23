@@ -775,17 +775,21 @@ tương đương với `IF ... ELSE`. Các hàm và kiểu được dùng gồm:
 Các trường bắt buộc dùng mẫu sau:
 
 ```text
-ISNULL(cột_nguồn)
-? (DT_STR,độ_rộng,65001)""
-: (DT_STR,độ_rộng,65001)TRIM(cột_nguồn)
+(DT_STR,độ_rộng,65001)(
+    ISNULL(cột_nguồn)
+    ? (DT_WSTR,độ_rộng)""
+    : TRIM((DT_WSTR,độ_rộng)cột_nguồn)
+)
 ```
 
 Ví dụ với `invoice_id`:
 
 ```text
-ISNULL(invoice_id)
-? (DT_STR,30,65001)""
-: (DT_STR,30,65001)TRIM(invoice_id)
+(DT_STR,30,65001)(
+    ISNULL(invoice_id)
+    ? (DT_WSTR,30)""
+    : TRIM((DT_WSTR,30)invoice_id)
+)
 ```
 
 Nếu nguồn là `NULL`, expression trả về chuỗi rỗng. Nếu nguồn có dữ liệu, expression loại khoảng trắng đầu và cuối.
@@ -820,7 +824,7 @@ Expression cho `county_name`:
 )
 ```
 
-SSIS chỉ hỗ trợ `DT_STR` ở cấp ngoài cùng khi expression trả về kết quả cuối cùng. Bên trong toán tử điều kiện `? :`, dùng `DT_WSTR`, sau đó ép toàn bộ kết quả sang `DT_STR` như hai expression trên.
+SSIS chỉ hỗ trợ `DT_STR` ở cấp ngoài cùng khi expression trả về kết quả cuối cùng. Quy tắc này áp dụng cho cả 15 cột: bên trong toán tử điều kiện `? :` dùng `DT_WSTR`, sau đó ép toàn bộ kết quả sang `DT_STR`.
 
 Không chuyển hai trường này thành chuỗi `"Unknown"` tại Raw. Giá trị Unknown chỉ nên được bổ sung khi xây dựng Dimension nếu nghiệp vụ yêu cầu.
 
@@ -830,21 +834,21 @@ Tạo lần lượt các dòng sau trong `Derived Column Transformation Editor`.
 
 | Derived Column Name | Derived Column | Expression |
 |---|---|---|
-| `clean_invoice_id` | `<add as new column>` | `ISNULL(invoice_id) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(invoice_id)` |
-| `clean_ordered_on` | `<add as new column>` | `ISNULL(ordered_on) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(ordered_on)` |
-| `clean_store_no` | `<add as new column>` | `ISNULL(store_no) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(store_no)` |
-| `clean_store_name` | `<add as new column>` | `ISNULL(store_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(store_name)` |
+| `clean_invoice_id` | `<add as new column>` | `(DT_STR,30,65001)(ISNULL(invoice_id) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)invoice_id))` |
+| `clean_ordered_on` | `<add as new column>` | `(DT_STR,20,65001)(ISNULL(ordered_on) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)ordered_on))` |
+| `clean_store_no` | `<add as new column>` | `(DT_STR,20,65001)(ISNULL(store_no) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)store_no))` |
+| `clean_store_name` | `<add as new column>` | `(DT_STR,255,65001)(ISNULL(store_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)store_name))` |
 | `clean_store_city` | `<add as new column>` | `(DT_STR,100,65001)(ISNULL(store_city) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)store_city)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)store_city)))` |
 | `clean_county_name` | `<add as new column>` | `(DT_STR,100,65001)(ISNULL(county_name) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)county_name)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)county_name)))` |
-| `clean_category_name` | `<add as new column>` | `ISNULL(category_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(category_name)` |
-| `clean_vendor_number` | `<add as new column>` | `ISNULL(vendor_number) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(vendor_number)` |
-| `clean_vendor_name` | `<add as new column>` | `ISNULL(vendor_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(vendor_name)` |
-| `clean_item_no` | `<add as new column>` | `ISNULL(item_no) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(item_no)` |
-| `clean_im_desc` | `<add as new column>` | `ISNULL(im_desc) ? (DT_STR,500,65001)"" : (DT_STR,500,65001)TRIM(im_desc)` |
-| `clean_bottle_volume_ml` | `<add as new column>` | `ISNULL(bottle_volume_ml) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(bottle_volume_ml)` |
-| `clean_sales_bottles` | `<add as new column>` | `ISNULL(sales_bottles) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(sales_bottles)` |
-| `clean_sales_dollars` | `<add as new column>` | `ISNULL(sales_dollars) ? (DT_STR,50,65001)"" : (DT_STR,50,65001)TRIM(sales_dollars)` |
-| `clean_sales_liters` | `<add as new column>` | `ISNULL(sales_liters) ? (DT_STR,50,65001)"" : (DT_STR,50,65001)TRIM(sales_liters)` |
+| `clean_category_name` | `<add as new column>` | `(DT_STR,255,65001)(ISNULL(category_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)category_name))` |
+| `clean_vendor_number` | `<add as new column>` | `(DT_STR,20,65001)(ISNULL(vendor_number) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)vendor_number))` |
+| `clean_vendor_name` | `<add as new column>` | `(DT_STR,255,65001)(ISNULL(vendor_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)vendor_name))` |
+| `clean_item_no` | `<add as new column>` | `(DT_STR,30,65001)(ISNULL(item_no) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)item_no))` |
+| `clean_im_desc` | `<add as new column>` | `(DT_STR,500,65001)(ISNULL(im_desc) ? (DT_WSTR,500)"" : TRIM((DT_WSTR,500)im_desc))` |
+| `clean_bottle_volume_ml` | `<add as new column>` | `(DT_STR,30,65001)(ISNULL(bottle_volume_ml) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)bottle_volume_ml))` |
+| `clean_sales_bottles` | `<add as new column>` | `(DT_STR,30,65001)(ISNULL(sales_bottles) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)sales_bottles))` |
+| `clean_sales_dollars` | `<add as new column>` | `(DT_STR,50,65001)(ISNULL(sales_dollars) ? (DT_WSTR,50)"" : TRIM((DT_WSTR,50)sales_dollars))` |
+| `clean_sales_liters` | `<add as new column>` | `(DT_STR,50,65001)(ISNULL(sales_liters) ? (DT_WSTR,50)"" : TRIM((DT_WSTR,50)sales_liters))` |
 
 Độ rộng đầu ra của từng cột phải khớp với bảng Raw:
 
@@ -917,6 +921,8 @@ Sau khi kiểm tra xong, có thể tắt Data Viewer để package chạy nhanh 
 | Expression chuyển màu đỏ | Kiểm tra đủ dấu ngoặc, dấu `?`, dấu `:` và dấu nháy kép |
 | Cột mã mất số `0` đầu | Flat File Source đang nhận dạng cột là số; đổi về `DT_STR` |
 | Lỗi khác code page | Bảo đảm Flat File Source và Derived Column đều dùng `65001` |
+| `Cannot convert between unicode and non-unicode string data types` | Cột `clean_*` đang trả về `DT_WSTR`; bảo đảm phép cast `(DT_STR,n,65001)` bao ngoài cùng toàn bộ expression |
+| `External columns ... are out of synchronization` | Mở lại OLE DB Destination, chọn lại `[stg].[LiquorSalesRaw]` và kiểm tra trang `Mappings`; nếu cảnh báo vẫn còn, xóa rồi tạo lại destination để làm mới metadata |
 | Lỗi truncation | Tăng độ rộng metadata của cột nguồn và cast trong expression |
 | Chuỗi rỗng không thành NULL | Chỉ áp dụng expression NULL dành cho `store_city` và `county_name` |
 | Khoảng trắng giữa tên vẫn còn | `TRIM` chỉ bỏ khoảng trắng đầu/cuối; không tự sửa khoảng trắng bên trong tên |
