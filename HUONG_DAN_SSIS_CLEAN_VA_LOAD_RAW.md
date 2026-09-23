@@ -821,7 +821,8 @@ tương đương với `IF ... ELSE`. Các hàm và kiểu được dùng gồm:
 | `LEN(column)` | Đếm số ký tự |
 | `DT_STR` | Chuỗi non-Unicode trong pipeline |
 | `65001` | Code page UTF-8 |
-| `NULL(DT_STR,n,65001)` | Tạo NULL với kiểu và độ rộng cụ thể |
+| `NULL(DT_WSTR,n)` | Tạo NULL Unicode để dùng bên trong expression có toán tử điều kiện |
+| `(DT_STR,n,65001)(expression)` | Ép kết quả cuối cùng sang chuỗi non-Unicode UTF-8; phép ép kiểu này phải nằm ở ngoài cùng |
 
 #### 10.2.2. Quy tắc cho trường bắt buộc
 
@@ -852,22 +853,28 @@ Không chuyển `store_no`, `vendor_number` hoặc `item_no` sang số vì các 
 Expression cho `store_city`:
 
 ```text
-ISNULL(store_city)
-? NULL(DT_STR,100,65001)
-: (LEN(TRIM(store_city)) == 0
-   ? NULL(DT_STR,100,65001)
-   : (DT_STR,100,65001)TRIM(store_city))
+(DT_STR,100,65001)(
+    ISNULL(store_city)
+    ? NULL(DT_WSTR,100)
+    : (LEN(TRIM((DT_WSTR,100)store_city)) == 0
+       ? NULL(DT_WSTR,100)
+       : TRIM((DT_WSTR,100)store_city))
+)
 ```
 
 Expression cho `county_name`:
 
 ```text
-ISNULL(county_name)
-? NULL(DT_STR,100,65001)
-: (LEN(TRIM(county_name)) == 0
-   ? NULL(DT_STR,100,65001)
-   : (DT_STR,100,65001)TRIM(county_name))
+(DT_STR,100,65001)(
+    ISNULL(county_name)
+    ? NULL(DT_WSTR,100)
+    : (LEN(TRIM((DT_WSTR,100)county_name)) == 0
+       ? NULL(DT_WSTR,100)
+       : TRIM((DT_WSTR,100)county_name))
+)
 ```
+
+SSIS chỉ hỗ trợ `DT_STR` ở cấp ngoài cùng khi expression trả về kết quả cuối cùng. Bên trong toán tử điều kiện `? :`, dùng `DT_WSTR`, sau đó ép toàn bộ kết quả sang `DT_STR` như hai expression trên.
 
 Không chuyển hai trường này thành chuỗi `"Unknown"` tại Raw. Giá trị Unknown chỉ nên được bổ sung khi xây dựng Dimension nếu nghiệp vụ yêu cầu.
 
@@ -881,8 +888,8 @@ Tạo lần lượt các dòng sau trong `Derived Column Transformation Editor`.
 | `clean_ordered_on` | `<add as new column>` | `ISNULL(ordered_on) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(ordered_on)` |
 | `clean_store_no` | `<add as new column>` | `ISNULL(store_no) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(store_no)` |
 | `clean_store_name` | `<add as new column>` | `ISNULL(store_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(store_name)` |
-| `clean_store_city` | `<add as new column>` | `ISNULL(store_city) ? NULL(DT_STR,100,65001) : (LEN(TRIM(store_city)) == 0 ? NULL(DT_STR,100,65001) : (DT_STR,100,65001)TRIM(store_city))` |
-| `clean_county_name` | `<add as new column>` | `ISNULL(county_name) ? NULL(DT_STR,100,65001) : (LEN(TRIM(county_name)) == 0 ? NULL(DT_STR,100,65001) : (DT_STR,100,65001)TRIM(county_name))` |
+| `clean_store_city` | `<add as new column>` | `(DT_STR,100,65001)(ISNULL(store_city) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)store_city)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)store_city)))` |
+| `clean_county_name` | `<add as new column>` | `(DT_STR,100,65001)(ISNULL(county_name) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)county_name)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)county_name)))` |
 | `clean_category_name` | `<add as new column>` | `ISNULL(category_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(category_name)` |
 | `clean_vendor_number` | `<add as new column>` | `ISNULL(vendor_number) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(vendor_number)` |
 | `clean_vendor_name` | `<add as new column>` | `ISNULL(vendor_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(vendor_name)` |
