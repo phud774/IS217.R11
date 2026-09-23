@@ -1,0 +1,290 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="9/23/2026 9:29:03 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-UBHQJIP0"
+  DTS:CreatorName="LAPTOP-UBHQJIP0\LENOVO"
+  DTS:DTSID="{8E75C04F-3624-49D4-9102-3A1C6D217CD2}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1066"
+  DTS:ObjectName="SetupDatabase"
+  DTS:PackageType="5"
+  DTS:VersionBuild="7"
+  DTS:VersionGUID="{D2479EFC-D9D4-4345-8937-DE3E28587B9A}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost,55753]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}"
+      DTS:ObjectName="localhost,55753">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost,55753;User ID=;Initial Catalog=;Provider=MSOLEDBSQL19.1;Persist Security Info=False;Integrated Security=SSPI;Initial File Name=;Trust Server Certificate=True;Server SPN=IowaLiquorDW;Authentication=;Access Token=;Host Name In Certificate=;Server Certificate=;Application Name=SSIS-Package-{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}localhost,55753;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost,55753.IowaLiquorDW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{4246AA77-0DBF-40A9-A790-8A9B31957F95}"
+      DTS:ObjectName="localhost,55753.IowaLiquorDW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost,55753;User ID=;Initial Catalog=IowaLiquorDW;Provider=MSOLEDBSQL19.1;Persist Security Info=False;Integrated Security=SSPI;Initial File Name=;Trust Server Certificate=True;Server SPN=;Authentication=;Access Token=;Host Name In Certificate=;Server Certificate=;Application Name=SSIS-Package-{4246AA77-0DBF-40A9-A790-8A9B31957F95}localhost,55753.IowaLiquorDW;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Create DB"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C37DFD77-CA68-4CD8-ADD1-F22F502BA155}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create DB"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}"
+          SQLTask:SqlStatementSource="IF DB_ID('IowaLiquorDW') IS NULL&#xA;BEGIN&#xA;    EXEC('CREATE DATABASE IowaLiquorDW');&#xA;END;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Dimension Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0E1BD09F-C139-4091-BDFA-E8E1A5777599}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Dimension Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;CREATE TABLE dbo.DIM_DATE&#xA;(&#xA;    date_key          int         NOT NULL,&#xA;    ordered_on        date        NOT NULL,&#xA;    day_number        tinyint     NOT NULL,&#xA;    month_number      tinyint     NOT NULL,&#xA;    month_name        varchar(20) NOT NULL,&#xA;    quarter_number    tinyint     NOT NULL,&#xA;    year_number       smallint    NOT NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_DATE&#xA;        PRIMARY KEY (date_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_DATE_ordered_on&#xA;        UNIQUE (ordered_on)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_STORE&#xA;(&#xA;    store_key      int IDENTITY(1,1) NOT NULL,&#xA;    store_no       varchar(20)       NOT NULL,&#xA;    store_name     varchar(255)      NULL,&#xA;    store_city     varchar(100)      NULL,&#xA;    county_name    varchar(100)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_STORE&#xA;        PRIMARY KEY (store_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_STORE_store_no&#xA;        UNIQUE (store_no)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_PRODUCT&#xA;(&#xA;    product_key       int IDENTITY(1,1) NOT NULL,&#xA;    item_no           varchar(30)       NOT NULL,&#xA;    im_desc           varchar(500)      NULL,&#xA;    bottle_volume_ml  int               NULL,&#xA;    category_name     varchar(255)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_PRODUCT&#xA;        PRIMARY KEY (product_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_PRODUCT_item_no&#xA;        UNIQUE (item_no)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_VENDOR&#xA;(&#xA;    vendor_key     int IDENTITY(1,1) NOT NULL,&#xA;    vendor_number  varchar(20)       NOT NULL,&#xA;    vendor_name    varchar(255)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_VENDOR&#xA;        PRIMARY KEY (vendor_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_VENDOR_vendor_number&#xA;        UNIQUE (vendor_number)&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Fact Table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5198E844-38E7-4382-AF41-183936FD15F8}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Fact Table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;CREATE TABLE dbo.FACT_LIQUOR_SALES&#xA;(&#xA;    sales_key       bigint IDENTITY(1,1) NOT NULL,&#xA;    invoice_id      varchar(30)           NOT NULL,&#xA;&#xA;    date_key        int                   NOT NULL,&#xA;    store_key       int                   NOT NULL,&#xA;    product_key     int                   NOT NULL,&#xA;    vendor_key      int                   NOT NULL,&#xA;&#xA;    sales_bottles   int                   NOT NULL,&#xA;    sales_dollars   decimal(19,2)         NOT NULL,&#xA;    sales_liters    decimal(19,3)         NOT NULL,&#xA;&#xA;    CONSTRAINT PK_FACT_LIQUOR_SALES&#xA;        PRIMARY KEY (sales_key),&#xA;&#xA;    CONSTRAINT UQ_FACT_LIQUOR_SALES_invoice&#xA;        UNIQUE (invoice_id),&#xA;&#xA;    CONSTRAINT FK_FACT_DATE&#xA;        FOREIGN KEY (date_key)&#xA;        REFERENCES dbo.DIM_DATE(date_key),&#xA;&#xA;    CONSTRAINT FK_FACT_STORE&#xA;        FOREIGN KEY (store_key)&#xA;        REFERENCES dbo.DIM_STORE(store_key),&#xA;&#xA;    CONSTRAINT FK_FACT_PRODUCT&#xA;        FOREIGN KEY (product_key)&#xA;        REFERENCES dbo.DIM_PRODUCT(product_key),&#xA;&#xA;    CONSTRAINT FK_FACT_VENDOR&#xA;        FOREIGN KEY (vendor_key)&#xA;        REFERENCES dbo.DIM_VENDOR(vendor_key)&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Staging Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{618C6517-DB9E-456E-919A-04424AEBEC26}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Staging Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{D4E8FEB5-66C8-4474-B770-51A6A89C8A64}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;IF SCHEMA_ID('stg') IS NULL&#xA;BEGIN&#xA;    EXEC('CREATE SCHEMA stg');&#xA;END;&#xA;&#xA;CREATE TABLE stg.LiquorSalesRaw&#xA;(&#xA;    invoice_id        varchar(30)  NULL,&#xA;    ordered_on        varchar(20)  NULL,&#xA;    store_no          varchar(20)  NULL,&#xA;    store_name        varchar(255) NULL,&#xA;    store_city        varchar(100) NULL,&#xA;    county_name       varchar(100) NULL,&#xA;    category_name     varchar(255) NULL,&#xA;    vendor_number     varchar(20)  NULL,&#xA;    vendor_name       varchar(255) NULL,&#xA;    item_no           varchar(30)  NULL,&#xA;    im_desc           varchar(500) NULL,&#xA;    bottle_volume_ml  varchar(30)  NULL,&#xA;    sales_bottles     varchar(30)  NULL,&#xA;    sales_dollars     varchar(50)  NULL,&#xA;    sales_liters      varchar(50)  NULL&#xA;);&#xA;&#xA;CREATE TABLE stg.LiquorSalesReject&#xA;(&#xA;    reject_id         bigint IDENTITY(1,1) NOT NULL,&#xA;    source_file       varchar(500) NULL,&#xA;    reject_reason     varchar(100) NULL,&#xA;    error_code        int          NULL,&#xA;    error_column      int          NULL,&#xA;&#xA;    invoice_id        varchar(30)  NULL,&#xA;    ordered_on        varchar(20)  NULL,&#xA;    store_no          varchar(20)  NULL,&#xA;    store_name        varchar(255) NULL,&#xA;    store_city        varchar(100) NULL,&#xA;    county_name       varchar(100) NULL,&#xA;    category_name     varchar(255) NULL,&#xA;    vendor_number     varchar(20)  NULL,&#xA;    vendor_name       varchar(255) NULL,&#xA;    item_no           varchar(30)  NULL,&#xA;    im_desc           varchar(500) NULL,&#xA;    bottle_volume_ml  varchar(30)  NULL,&#xA;    sales_bottles     varchar(30)  NULL,&#xA;    sales_dollars     varchar(50)  NULL,&#xA;    sales_liters      varchar(50)  NULL,&#xA;&#xA;    rejected_at       datetime2 NOT NULL&#xA;        CONSTRAINT DF_LiquorSalesReject_rejected_at&#xA;        DEFAULT SYSDATETIME(),&#xA;&#xA;    CONSTRAINT PK_LiquorSalesReject&#xA;        PRIMARY KEY (reject_id)&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Drop Existing Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{CBFA78FE-11D2-4B02-9C0F-78E77E584859}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Drop Existing Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{4246AA77-0DBF-40A9-A790-8A9B31957F95}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;-- Fact phải được drop trước vì đang tham chiếu các Dimension.&#xA;DROP TABLE IF EXISTS dbo.FACT_LIQUOR_SALES;&#xA;&#xA;DROP TABLE IF EXISTS dbo.DIM_VENDOR;&#xA;DROP TABLE IF EXISTS dbo.DIM_PRODUCT;&#xA;DROP TABLE IF EXISTS dbo.DIM_STORE;&#xA;DROP TABLE IF EXISTS dbo.DIM_DATE;&#xA;&#xA;DROP TABLE IF EXISTS stg.LiquorSalesReject;&#xA;DROP TABLE IF EXISTS stg.LiquorSalesRaw;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{3696F094-9B8C-48B5-A455-FD022968CE45}"
+      DTS:From="Package\Create DB"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Drop Existing Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{DD326FCD-7081-43E5-8107-C84F51C5A5DB}"
+      DTS:From="Package\Drop Existing Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Create Staging Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{D2C49C55-9E73-4560-ADE2-B5CA521D63CC}"
+      DTS:From="Package\Create Staging Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Create Dimension Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{B0BF9AAF-E315-49EB-BF68-B0324421281D}"
+      DTS:From="Package\Create Dimension Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Create Fact Table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Create DB"
+          TopLeft="219,161" />
+        <NodeLayout
+          Size="180,42"
+          Id="Package\Drop Existing Tables"
+          TopLeft="201,238" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="287.5,203">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35"
+              Start="0,0"
+              End="0,27.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Create Staging Tables"
+          TopLeft="205,312" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="287.5,280">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,32"
+              Start="0,0"
+              End="0,24.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Create Dimension Tables"
+          TopLeft="203,401" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="289,354">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47"
+              Start="0,0"
+              End="0,39.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Create Fact Table"
+          TopLeft="202,497" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="287.5,443">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="0,46.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
