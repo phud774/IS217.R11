@@ -10,8 +10,8 @@ SSIS sẽ thực hiện toàn bộ các công việc sau:
 2. Đọc đủ 23 cột nguồn dưới dạng chuỗi.
 3. Loại khoảng trắng thừa và đổi chuỗi rỗng thành `NULL` khi phù hợp.
 4. Chọn 15 cột cần thiết cho mô hình sao.
-5. Kiểm tra định dạng ngày và số.
-6. Nạp dữ liệu vào `stg.LiquorSalesRaw`.
+5. Nạp 15 cột đã làm sạch vào `stg.LiquorSalesRaw` dưới dạng chuỗi.
+6. Kiểm tra định dạng ngày và số sau khi nạp bằng `TRY_CONVERT`.
 
 Mô hình sao đích được mô tả trong:
 
@@ -41,14 +41,13 @@ Derived Column
 - Tạo 15 cột sạch
           |
           v
-Data Conversion
-Kiểm tra date, int và decimal
+OLE DB Destination
           |
           v
 stg.LiquorSalesRaw
 ```
 
-> Bảng Raw vẫn dùng các cột `varchar`. Data Conversion chỉ được dùng để kiểm tra dữ liệu có chuyển được sang ngày và số hay không. Việc nạp các bảng Dimension và Fact mới sử dụng kiểu dữ liệu chính thức.
+> Bảng Raw dùng các cột `varchar` để giữ dữ liệu gần với nguồn. Việc chuyển sang `date`, `int` và `decimal` được thực hiện ở các bước nạp Dimension và Fact. Sau khi nạp Raw, dùng các truy vấn `TRY_CONVERT` trong mục kiểm tra kết quả để phát hiện dữ liệu sai định dạng.
 
 ## 3. Quy tắc làm sạch
 
@@ -642,9 +641,6 @@ SRC - Original CSV
 DRV - Clean Columns
         |
         v
-DC - Validate Data Types
-        |
-        v
 DST - LiquorSalesRaw
 ```
 
@@ -889,9 +885,9 @@ Các cột nguồn này vẫn đi qua pipeline nhưng sẽ tự động bị b�
 
 #### 10.2.6. Kiểm tra Derived Column bằng Data Viewer
 
-Trước khi nối sang Data Conversion, nên kiểm tra kết quả:
+Trước khi nạp vào bảng Raw, nên kiểm tra kết quả:
 
-1. Nối `DRV - Clean Columns` với `DC - Validate Data Types`.
+1. Nối `DRV - Clean Columns` với `DST - LiquorSalesRaw`.
 2. Nhấn phải chuột vào đường nối màu xanh.
 3. Chọn `Enable Data Viewer` hoặc `Data Viewers` -> `Add` -> `Grid` tùy phiên bản Visual Studio.
 4. Chạy package với một file mẫu.
@@ -927,46 +923,11 @@ Sau khi kiểm tra xong, có thể tắt Data Viewer để package chạy nhanh 
 | Chuỗi rỗng không thành NULL | Chỉ áp dụng expression NULL dành cho `store_city` và `county_name` |
 | Khoảng trắng giữa tên vẫn còn | `TRIM` chỉ bỏ khoảng trắng đầu/cuối; không tự sửa khoảng trắng bên trong tên |
 
-Sau khi bấm `OK`, output của `DRV - Clean Columns` phải có 23 cột nguồn và 15 cột sạch. Bước tiếp theo là Data Conversion kiểm tra định dạng ngày và số.
+Sau khi bấm `OK`, output của `DRV - Clean Columns` phải có 23 cột nguồn và 15 cột sạch. Nối trực tiếp output này vào OLE DB Destination; không thêm Data Conversion tại bước Raw.
 
-### 10.3. Data Conversion kiểm tra ngày và số
+### 10.3. OLE DB Destination nạp Raw
 
-Nối output của `DRV - Clean Columns` vào `Data Conversion`, sau đó đổi tên component thành:
-
-```text
-DC - Validate Data Types
-```
-
-Cấu hình:
-
-| Input column | Output alias | Data type |
-|---|---|---|
-| `clean_ordered_on` | `valid_ordered_on` | database date `[DT_DBDATE]` |
-| `clean_bottle_volume_ml` | `valid_bottle_volume_ml` | four-byte signed integer `[DT_I4]` |
-| `clean_sales_bottles` | `valid_sales_bottles` | four-byte signed integer `[DT_I4]` |
-| `clean_sales_dollars` | `valid_sales_dollars` | numeric `[DT_NUMERIC]`, precision 19, scale 2 |
-| `clean_sales_liters` | `valid_sales_liters` | numeric `[DT_NUMERIC]`, precision 19, scale 3 |
-
-Trong `Configure Error Output`, đặt cho các cột:
-
-```text
-Error      = Fail component
-Truncation = Fail component
-```
-
-Không sử dụng `Ignore failure`. Nếu dữ liệu ngày hoặc số sai định dạng, package phải dừng để lỗi được phát hiện thay vì âm thầm bỏ qua dữ liệu.
-
-Nếu có thuộc tính `LocaleID` trên Data Flow hoặc component, đặt:
-
-```text
-1033 - English (United States)
-```
-
-Dữ liệu nguồn dùng ngày `YYYY-MM-DD` và dấu chấm cho số thập phân.
-
-### 10.4. OLE DB Destination nạp Raw
-
-Nối output thành công của Data Conversion vào `OLE DB Destination` và đặt tên:
+Nối trực tiếp output của `DRV - Clean Columns` vào `OLE DB Destination` và đặt tên:
 
 ```text
 DST - LiquorSalesRaw
@@ -1003,8 +964,6 @@ Cấu hình:
 | `clean_sales_dollars` | `sales_dollars` |
 | `clean_sales_liters` | `sales_liters` |
 
-Không ánh xạ các cột `valid_*`; chúng chỉ dùng để xác nhận dữ liệu chuyển kiểu thành công.
-
 Nếu OLE DB Destination báo lỗi khác code page, mở `Advanced Editor` và đặt:
 
 ```text
@@ -1028,8 +987,8 @@ Trước khi chạy package Load Raw, kiểm tra:
 - `Text qualifier` là dấu nháy kép.
 - `User::FilePath` được map tại index `0` của Foreach Loop.
 - OLE DB Connection Manager trỏ tới database `IowaLiquorDW`.
+- `DRV - Clean Columns` được nối trực tiếp tới `DST - LiquorSalesRaw`.
 - Destination Raw đã map đủ 15 cột.
-- Các error output của Data Conversion dùng `Fail component`.
 - Không có task Dimension hoặc Fact trong package này.
 
 Nhấn `F5` nếu `01_Load_Raw_SSIS.dtsx` đang được chọn làm startup package.
@@ -1136,6 +1095,7 @@ Bước Raw hoàn thành khi đáp ứng đủ các điều kiện sau:
 - Foreach Loop đọc đủ 5 CSV.
 - Flat File Source nhận đủ 23 cột nguồn.
 - Derived Column tạo đủ 15 cột sạch.
+- Derived Column nối trực tiếp tới OLE DB Destination, không chuyển kiểu tại bước Raw.
 - Dòng thiếu `store_city` hoặc `county_name` vẫn được giữ.
 - Dòng có doanh thu hoặc số lượng âm vẫn được giữ.
 - Raw có 2.590.975 dòng.
