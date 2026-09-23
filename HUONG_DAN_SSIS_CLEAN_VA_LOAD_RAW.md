@@ -695,15 +695,61 @@ Trong `Columns`, giữ đủ 23 cột. Các cột không dùng sẽ được b�
 
 ### 10.2. Derived Column làm sạch
 
-Thêm `Derived Column` và đổi tên:
+`Derived Column` là transformation xử lý từng dòng dữ liệu. Nó không sửa file CSV gốc và cũng chưa ghi dữ liệu vào SQL Server. Trong bước này, component nhận 23 cột từ Flat File Source, giữ nguyên các cột nguồn và tạo thêm các cột đã làm sạch có tiền tố `clean_`.
+
+Ví dụ:
+
+```text
+Dữ liệu nguồn                 Cột mới sau Derived Column
+store_no  = "  2191 "         clean_store_no   = "2191"
+store_name = " KEOKUK "       clean_store_name = "KEOKUK"
+store_city = ""               clean_store_city = NULL
+```
+
+Các cột nguồn vẫn còn trong pipeline. Khi nạp Raw, chỉ ánh xạ các cột `clean_*` và bỏ qua tám cột không sử dụng.
+
+#### 10.2.1. Thêm component
+
+1. Trong `SSIS Toolbox`, kéo `Derived Column` vào Data Flow.
+2. Nối mũi tên xanh từ `SRC - Original CSV` vào component này.
+3. Đổi tên component thành:
 
 ```text
 DRV - Clean Columns
 ```
 
-Tạo 15 cột mới với tiền tố `clean_`. Chọn `add as new column`, không ghi đè cột nguồn.
+4. Nhấp đúp vào `DRV - Clean Columns` để mở `Derived Column Transformation Editor`.
+5. Kiểm tra vùng `Available Input Columns` có đủ 23 cột nguồn.
+6. Với mỗi dòng cấu hình bên dưới, tại cột `Derived Column` phải chọn `<add as new column>`. Không chọn thay thế cột nguồn.
 
-Mẫu expression cho trường bắt buộc, ví dụ `invoice_id`:
+Trong SSIS Expression, cấu trúc:
+
+```text
+điều_kiện ? giá_trị_khi_đúng : giá_trị_khi_sai
+```
+
+tương đương với `IF ... ELSE`. Các hàm và kiểu được dùng gồm:
+
+| Thành phần | Ý nghĩa |
+|---|---|
+| `ISNULL(column)` | Kiểm tra giá trị SQL/SSIS NULL |
+| `TRIM(column)` | Bỏ khoảng trắng ở đầu và cuối chuỗi |
+| `LEN(column)` | Đếm số ký tự |
+| `DT_STR` | Chuỗi non-Unicode trong pipeline |
+| `65001` | Code page UTF-8 |
+| `NULL(DT_STR,n,65001)` | Tạo NULL với kiểu và độ rộng cụ thể |
+
+#### 10.2.2. Quy tắc cho trường bắt buộc
+
+Các trường bắt buộc dùng mẫu sau:
+
+```text
+ISNULL(cột_nguồn)
+? (DT_STR,độ_rộng,65001)""
+: (DT_STR,độ_rộng,65001)TRIM(cột_nguồn)
+```
+
+Ví dụ với `invoice_id`:
 
 ```text
 ISNULL(invoice_id)
@@ -711,15 +757,59 @@ ISNULL(invoice_id)
 : (DT_STR,30,65001)TRIM(invoice_id)
 ```
 
-Mẫu expression cho trường được phép thiếu, ví dụ `store_city`:
+Nếu nguồn là `NULL`, expression trả về chuỗi rỗng. Nếu nguồn có dữ liệu, expression loại khoảng trắng đầu và cuối. Sau đó Conditional Split sẽ chuyển dòng sang Reject nếu kết quả vẫn rỗng.
+
+Không chuyển `store_no`, `vendor_number` hoặc `item_no` sang số vì các mã này có thể có số `0` ở đầu.
+
+#### 10.2.3. Quy tắc cho trường được phép thiếu
+
+`store_city` và `county_name` được phép thiếu. Với hai cột này, cả NULL, chuỗi rỗng và chuỗi chỉ có khoảng trắng đều được chuẩn hóa thành NULL.
+
+Expression cho `store_city`:
 
 ```text
-ISNULL(store_city) || LEN(TRIM(store_city)) == 0
+ISNULL(store_city)
 ? NULL(DT_STR,100,65001)
-: (DT_STR,100,65001)TRIM(store_city)
+: (LEN(TRIM(store_city)) == 0
+   ? NULL(DT_STR,100,65001)
+   : (DT_STR,100,65001)TRIM(store_city))
 ```
 
-Tạo các cột sau:
+Expression cho `county_name`:
+
+```text
+ISNULL(county_name)
+? NULL(DT_STR,100,65001)
+: (LEN(TRIM(county_name)) == 0
+   ? NULL(DT_STR,100,65001)
+   : (DT_STR,100,65001)TRIM(county_name))
+```
+
+Không chuyển hai trường này thành chuỗi `"Unknown"` tại Raw. Giá trị Unknown chỉ nên được bổ sung khi xây dựng Dimension nếu nghiệp vụ yêu cầu.
+
+#### 10.2.4. Nhập đầy đủ 15 expression
+
+Tạo lần lượt các dòng sau trong `Derived Column Transformation Editor`. Có thể nhập expression trên một dòng; việc xuống dòng trong bảng chỉ nhằm giúp đọc dễ hơn.
+
+| Derived Column Name | Derived Column | Expression |
+|---|---|---|
+| `clean_invoice_id` | `<add as new column>` | `ISNULL(invoice_id) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(invoice_id)` |
+| `clean_ordered_on` | `<add as new column>` | `ISNULL(ordered_on) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(ordered_on)` |
+| `clean_store_no` | `<add as new column>` | `ISNULL(store_no) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(store_no)` |
+| `clean_store_name` | `<add as new column>` | `ISNULL(store_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(store_name)` |
+| `clean_store_city` | `<add as new column>` | `ISNULL(store_city) ? NULL(DT_STR,100,65001) : (LEN(TRIM(store_city)) == 0 ? NULL(DT_STR,100,65001) : (DT_STR,100,65001)TRIM(store_city))` |
+| `clean_county_name` | `<add as new column>` | `ISNULL(county_name) ? NULL(DT_STR,100,65001) : (LEN(TRIM(county_name)) == 0 ? NULL(DT_STR,100,65001) : (DT_STR,100,65001)TRIM(county_name))` |
+| `clean_category_name` | `<add as new column>` | `ISNULL(category_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(category_name)` |
+| `clean_vendor_number` | `<add as new column>` | `ISNULL(vendor_number) ? (DT_STR,20,65001)"" : (DT_STR,20,65001)TRIM(vendor_number)` |
+| `clean_vendor_name` | `<add as new column>` | `ISNULL(vendor_name) ? (DT_STR,255,65001)"" : (DT_STR,255,65001)TRIM(vendor_name)` |
+| `clean_item_no` | `<add as new column>` | `ISNULL(item_no) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(item_no)` |
+| `clean_im_desc` | `<add as new column>` | `ISNULL(im_desc) ? (DT_STR,500,65001)"" : (DT_STR,500,65001)TRIM(im_desc)` |
+| `clean_bottle_volume_ml` | `<add as new column>` | `ISNULL(bottle_volume_ml) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(bottle_volume_ml)` |
+| `clean_sales_bottles` | `<add as new column>` | `ISNULL(sales_bottles) ? (DT_STR,30,65001)"" : (DT_STR,30,65001)TRIM(sales_bottles)` |
+| `clean_sales_dollars` | `<add as new column>` | `ISNULL(sales_dollars) ? (DT_STR,50,65001)"" : (DT_STR,50,65001)TRIM(sales_dollars)` |
+| `clean_sales_liters` | `<add as new column>` | `ISNULL(sales_liters) ? (DT_STR,50,65001)"" : (DT_STR,50,65001)TRIM(sales_liters)` |
+
+Độ rộng đầu ra của từng cột phải khớp với bảng Raw:
 
 | Derived column | Source column | Độ rộng |
 |---|---|---:|
@@ -739,14 +829,25 @@ Tạo các cột sau:
 | `clean_sales_dollars` | `sales_dollars` | 50 |
 | `clean_sales_liters` | `sales_liters` | 50 |
 
-Tạo thêm cột chứa file nguồn:
+#### 10.2.5. Thêm tên file nguồn
+
+Thêm dòng thứ 16 để biết mỗi bản ghi đến từ file nào:
+
+| Derived Column Name | Derived Column | Expression |
+|---|---|---|
+| `clean_source_file` | `<add as new column>` | `(DT_STR,500,65001)@[User::FilePath]` |
+
+Biến `User::FilePath` được Foreach Loop cập nhật trước mỗi vòng lặp. Ví dụ giá trị đầu ra:
 
 ```text
-Derived column: clean_source_file
-Expression:     (DT_STR,500,65001)@[User::FilePath]
+C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv
 ```
 
-Không tạo cột sạch cho tám cột không sử dụng:
+`clean_source_file` chỉ được map vào bảng Reject để truy vết lỗi; bảng Raw hiện tại không có cột `source_file`.
+
+#### 10.2.6. Không cần xóa tám cột không sử dụng
+
+Derived Column không có nhiệm vụ xóa cột. Không tạo cột `clean_*` cho tám cột sau:
 
 ```text
 store_address
@@ -758,6 +859,49 @@ state_bottle_cost
 state_bottle_retail
 sales_gallons
 ```
+
+Các cột nguồn này vẫn đi qua pipeline nhưng sẽ tự động bị bỏ khi không được map vào OLE DB Destination.
+
+#### 10.2.7. Kiểm tra Derived Column bằng Data Viewer
+
+Trước khi nối sang Conditional Split, nên kiểm tra kết quả:
+
+1. Nối `DRV - Clean Columns` với `CS - Validate Required Fields`.
+2. Nhấn phải chuột vào đường nối màu xanh.
+3. Chọn `Enable Data Viewer` hoặc `Data Viewers` -> `Add` -> `Grid` tùy phiên bản Visual Studio.
+4. Chạy package với một file mẫu.
+5. So sánh các cặp cột:
+
+```text
+invoice_id        <-> clean_invoice_id
+store_no          <-> clean_store_no
+store_city        <-> clean_store_city
+county_name       <-> clean_county_name
+sales_dollars     <-> clean_sales_dollars
+```
+
+Kết quả đúng khi:
+
+- Không còn khoảng trắng ở đầu hoặc cuối các cột `clean_*`.
+- Mã `065` vẫn là `065`, không trở thành `65`.
+- `store_city` và `county_name` trống được hiển thị là NULL.
+- Các giá trị âm như `-12` hoặc `-144.00` vẫn được giữ.
+- Cột `clean_source_file` chứa đúng file đang được Foreach Loop xử lý.
+
+Sau khi kiểm tra xong, có thể tắt Data Viewer để package chạy nhanh hơn với toàn bộ 2.590.975 dòng.
+
+#### 10.2.8. Lỗi thường gặp
+
+| Hiện tượng | Nguyên nhân và cách xử lý |
+|---|---|
+| Expression chuyển màu đỏ | Kiểm tra đủ dấu ngoặc, dấu `?`, dấu `:` và dấu nháy kép |
+| Cột mã mất số `0` đầu | Flat File Source đang nhận dạng cột là số; đổi về `DT_STR` |
+| Lỗi khác code page | Bảo đảm Flat File Source và Derived Column đều dùng `65001` |
+| Lỗi truncation | Tăng độ rộng metadata của cột nguồn và cast trong expression |
+| Chuỗi rỗng không thành NULL | Chỉ áp dụng expression NULL dành cho `store_city` và `county_name` |
+| Khoảng trắng giữa tên vẫn còn | `TRIM` chỉ bỏ khoảng trắng đầu/cuối; không tự sửa khoảng trắng bên trong tên |
+
+Sau khi bấm `OK`, output của `DRV - Clean Columns` phải có 23 cột nguồn, 15 cột sạch và một cột `clean_source_file`. Bước tiếp theo là Conditional Split kiểm tra trường bắt buộc.
 
 ### 10.3. Conditional Split kiểm tra trường bắt buộc
 
