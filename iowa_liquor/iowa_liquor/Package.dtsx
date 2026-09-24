@@ -1,0 +1,2364 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="9/24/2026 7:52:57 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-UBHQJIP0"
+  DTS:CreatorName="LAPTOP-UBHQJIP0\LENOVO"
+  DTS:DTSID="{BE678053-B62E-40FB-8374-BFB687A2A013}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1066"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{9A4C6592-3E0F-487F-BD03-08DB3DB3BD14}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Flat File Connection Manager]"
+      DTS:CreationName="FLATFILE"
+      DTS:DelayValidation="True"
+      DTS:DTSID="{FFA571CE-F6D2-4A2B-ABC2-D048EBE9EA83}"
+      DTS:ObjectName="Flat File Connection Manager">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[User::FilePath]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:Format="Delimited"
+          DTS:LocaleID="1066"
+          DTS:HeaderRowDelimiter="_x000D__x000A_"
+          DTS:ColumnNamesInFirstDataRow="True"
+          DTS:RowDelimiter=""
+          DTS:TextQualifier="_x0022_"
+          DTS:CodePage="65001"
+          DTS:ConnectionString="C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv">
+          <DTS:FlatFileColumns>
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="invoice_id"
+              DTS:DTSID="{DD028F50-0FA4-4867-A4F9-7794CDA3D77C}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ordered_on"
+              DTS:DTSID="{CB5B7A1D-0BF3-4EC2-97FA-41FDABC8DCBF}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="store_no"
+              DTS:DTSID="{AB05B3F8-ABF6-495F-8A0B-CD6E39D516C4}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="store_name"
+              DTS:DTSID="{EEC1F75D-5878-40BB-96B1-021872C0941C}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="store_address"
+              DTS:DTSID="{A39D0272-BE3E-4F50-93BF-105843C078A7}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="store_city"
+              DTS:DTSID="{5130B176-9216-4247-99D1-96E9981F83F7}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="store_zip_code"
+              DTS:DTSID="{C57DF4D2-E51B-479E-989B-882E91AACC41}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="county_fips_code"
+              DTS:DTSID="{C0585614-9E28-4581-973C-9EC57EEC6038}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="county_name"
+              DTS:DTSID="{96D64B1B-3D78-4B27-9A05-6035558BCC2D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="category_code"
+              DTS:DTSID="{A22F7EB0-B93A-4BD5-B6A4-FB5A05C5A6D6}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="category_name"
+              DTS:DTSID="{880EE88E-3DC4-4623-872B-64FC99688838}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="vendor_number"
+              DTS:DTSID="{4DC5538C-C36A-470D-B2B2-FBBD32FB1907}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="vendor_name"
+              DTS:DTSID="{79D1FA16-7FE8-4BF5-B9D8-60E25C721761}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="item_no"
+              DTS:DTSID="{E8176CFE-47EA-41B6-B77E-344CE98350D5}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="500"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="im_desc"
+              DTS:DTSID="{432AD754-05B6-47B8-8108-D92736855831}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="pack"
+              DTS:DTSID="{55D002C2-2AE0-4255-937B-FDA9DE23F2A7}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="bottle_volume_ml"
+              DTS:DTSID="{86F8D24B-32DE-49BD-AA96-BFB0A628E786}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="state_bottle_cost"
+              DTS:DTSID="{1F60CD72-5C23-4346-822F-4AED7B164A4C}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="state_bottle_retail"
+              DTS:DTSID="{E7A032BF-70E1-4E2D-9833-48343DA4B320}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="sales_bottles"
+              DTS:DTSID="{93D0B743-5F9C-4A82-9C29-1AC98A3BAC8D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="sales_dollars"
+              DTS:DTSID="{2C13FF94-7E1B-430E-81D5-066EFA1838A2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="sales_liters"
+              DTS:DTSID="{D3E1D9C8-1E4F-44F4-B169-654AE400632C}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000A_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="sales_gallons"
+              DTS:DTSID="{74D3101D-551D-41CA-84FD-403DD552A7EE}"
+              DTS:CreationName="" />
+          </DTS:FlatFileColumns>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost,55753]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+      DTS:ObjectName="localhost,55753">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost,55753;User ID=;Initial Catalog=;Provider=MSOLEDBSQL19.1;Persist Security Info=False;Integrated Security=SSPI;Initial File Name=;Trust Server Certificate=True;Server SPN=IowaLiquorDW;Authentication=;Access Token=;Host Name In Certificate=;Server Certificate=;Application Name=SSIS-Package-{1BCFBFFA-1780-416E-B315-7CE638F7177F}localhost,55753;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost,55753.IowaLiquorDW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{8C1530DB-E446-4B78-B080-F17F62FF5445}"
+      DTS:ObjectName="localhost,55753.IowaLiquorDW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost,55753;User ID=;Initial Catalog=IowaLiquorDW;Provider=MSOLEDBSQL19.1;Persist Security Info=False;Integrated Security=SSPI;Initial File Name=;Trust Server Certificate=True;Server SPN=;Authentication=;Access Token=;Host Name In Certificate=;Server Certificate=;Application Name=SSIS-Package-{8C1530DB-E446-4B78-B080-F17F62FF5445}localhost,55753.IowaLiquorDW;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{883BE5D7-ECAB-4E3B-9B71-D9DE6F2C52E8}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilePath">
+      <DTS:VariableValue
+        DTS:DataType="8">C:\coding_space\study\IS217\data\iowa_liquor_sales_2024_1261_rows_part_0001.csv</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D9087E28-73F0-4CB0-A0AC-A8A50F4487B4}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceFolder">
+      <DTS:VariableValue
+        DTS:DataType="8">C:\coding_space\study\IS217\data</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Create Database"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{66F31B54-AA35-4056-B9B0-B5A4BC66EC30}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Database"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+          SQLTask:SqlStatementSource="IF DB_ID('IowaLiquorDW') IS NULL&#xA;BEGIN&#xA;    EXEC('CREATE DATABASE IowaLiquorDW');&#xA;END;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Dimension Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{A875574B-4575-43EE-A567-FE7A3AF86445}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Dimension Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;CREATE TABLE dbo.DIM_DATE&#xA;(&#xA;    date_key          int         NOT NULL,&#xA;    ordered_on        date        NOT NULL,&#xA;    day_number        tinyint     NOT NULL,&#xA;    month_number      tinyint     NOT NULL,&#xA;    month_name        varchar(20) NOT NULL,&#xA;    quarter_number    tinyint     NOT NULL,&#xA;    year_number       smallint    NOT NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_DATE&#xA;        PRIMARY KEY (date_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_DATE_ordered_on&#xA;        UNIQUE (ordered_on)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_STORE&#xA;(&#xA;    store_key      int IDENTITY(1,1) NOT NULL,&#xA;    store_no       varchar(20)       NOT NULL,&#xA;    store_name     varchar(255)      NULL,&#xA;    store_city     varchar(100)      NULL,&#xA;    county_name    varchar(100)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_STORE&#xA;        PRIMARY KEY (store_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_STORE_store_no&#xA;        UNIQUE (store_no)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_PRODUCT&#xA;(&#xA;    product_key       int IDENTITY(1,1) NOT NULL,&#xA;    item_no           varchar(30)       NOT NULL,&#xA;    im_desc           varchar(500)      NULL,&#xA;    bottle_volume_ml  int               NULL,&#xA;    category_name     varchar(255)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_PRODUCT&#xA;        PRIMARY KEY (product_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_PRODUCT_item_no&#xA;        UNIQUE (item_no)&#xA;);&#xA;&#xA;CREATE TABLE dbo.DIM_VENDOR&#xA;(&#xA;    vendor_key     int IDENTITY(1,1) NOT NULL,&#xA;    vendor_number  varchar(20)       NOT NULL,&#xA;    vendor_name    varchar(255)      NULL,&#xA;&#xA;    CONSTRAINT PK_DIM_VENDOR&#xA;        PRIMARY KEY (vendor_key),&#xA;&#xA;    CONSTRAINT UQ_DIM_VENDOR_vendor_number&#xA;        UNIQUE (vendor_number)&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Fact Table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{731075C6-BA7A-4689-BEB8-2D983D7EFBAA}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Fact Table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;CREATE TABLE dbo.FACT_LIQUOR_SALES&#xA;(&#xA;    sales_key       bigint IDENTITY(1,1) NOT NULL,&#xA;    invoice_id      varchar(30)           NOT NULL,&#xA;&#xA;    date_key        int                   NOT NULL,&#xA;    store_key       int                   NOT NULL,&#xA;    product_key     int                   NOT NULL,&#xA;    vendor_key      int                   NOT NULL,&#xA;&#xA;    sales_bottles   int                   NOT NULL,&#xA;    sales_dollars   decimal(19,2)         NOT NULL,&#xA;    sales_liters    decimal(19,3)         NOT NULL,&#xA;&#xA;    CONSTRAINT PK_FACT_LIQUOR_SALES&#xA;        PRIMARY KEY (sales_key),&#xA;&#xA;    CONSTRAINT UQ_FACT_LIQUOR_SALES_invoice&#xA;        UNIQUE (invoice_id),&#xA;&#xA;    CONSTRAINT FK_FACT_DATE&#xA;        FOREIGN KEY (date_key)&#xA;        REFERENCES dbo.DIM_DATE(date_key),&#xA;&#xA;    CONSTRAINT FK_FACT_STORE&#xA;        FOREIGN KEY (store_key)&#xA;        REFERENCES dbo.DIM_STORE(store_key),&#xA;&#xA;    CONSTRAINT FK_FACT_PRODUCT&#xA;        FOREIGN KEY (product_key)&#xA;        REFERENCES dbo.DIM_PRODUCT(product_key),&#xA;&#xA;    CONSTRAINT FK_FACT_VENDOR&#xA;        FOREIGN KEY (vendor_key)&#xA;        REFERENCES dbo.DIM_VENDOR(vendor_key)&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create Raw Table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{CB64D03E-83AF-4175-9FB0-317BD0B4E3DB}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create Raw Table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;IF SCHEMA_ID('stg') IS NULL&#xA;BEGIN&#xA;    EXEC('CREATE SCHEMA stg');&#xA;END;&#xA;&#xA;CREATE TABLE stg.LiquorSalesRaw&#xA;(&#xA;    invoice_id        varchar(30)  NULL,&#xA;    ordered_on        varchar(20)  NULL,&#xA;    store_no          varchar(20)  NULL,&#xA;    store_name        varchar(255) NULL,&#xA;    store_city        varchar(100) NULL,&#xA;    county_name       varchar(100) NULL,&#xA;    category_name     varchar(255) NULL,&#xA;    vendor_number     varchar(20)  NULL,&#xA;    vendor_name       varchar(255) NULL,&#xA;    item_no           varchar(30)  NULL,&#xA;    im_desc           varchar(500) NULL,&#xA;    bottle_volume_ml  varchar(30)  NULL,&#xA;    sales_bottles     varchar(30)  NULL,&#xA;    sales_dollars     varchar(50)  NULL,&#xA;    sales_liters      varchar(50)  NULL&#xA;);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Drop Existing Tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{79F7939F-B636-4331-821A-BC04B77271C5}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Drop Existing Tables"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1BCFBFFA-1780-416E-B315-7CE638F7177F}"
+          SQLTask:SqlStatementSource="USE IowaLiquorDW;&#xA;&#xA;-- Fact phải được drop trước vì đang tham chiếu các Dimension.&#xA;DROP TABLE IF EXISTS dbo.FACT_LIQUOR_SALES;&#xA;&#xA;DROP TABLE IF EXISTS dbo.DIM_VENDOR;&#xA;DROP TABLE IF EXISTS dbo.DIM_PRODUCT;&#xA;DROP TABLE IF EXISTS dbo.DIM_STORE;&#xA;DROP TABLE IF EXISTS dbo.DIM_DATE;&#xA;&#xA;DROP TABLE IF EXISTS stg.LiquorSalesRaw;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Loop Source Files"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{8374B9FF-EBA2-40E3-9B20-8C9BE11A8EA3}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Loop Source Files">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachFileEnumerator"
+        DTS:DTSID="{867D7FA3-D75C-4CB4-8421-76E10B9867A1}"
+        DTS:ObjectName="{867D7FA3-D75C-4CB4-8421-76E10B9867A1}">
+        <DTS:ObjectData>
+          <ForEachFileEnumeratorProperties>
+            <FEFEProperty
+              Folder="C:\coding_space\study\IS217\data" />
+            <FEFEProperty
+              FileSpec="iowa_liquor_sales_2024_1261_rows_part_*.csv" />
+            <FEFEProperty
+              FileNameRetrievalType="0" />
+            <FEFEProperty
+              Recurse="0" />
+          </ForEachFileEnumeratorProperties>
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Loop Source Files\Clean and Load Raw"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:DelayValidation="True"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{FCFF7F1E-442B-4204-890F-0D0A96A43926}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Clean and Load Raw"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Loop Source Files\Clean and Load Raw\Derived Column"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Derived Column"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[invoice_id]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="invoice_id"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[invoice_id]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[ordered_on]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="ordered_on"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[ordered_on]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[store_no]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="store_no"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_no]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[store_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="store_name"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[store_city]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="store_city"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[county_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="county_name"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[category_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="category_name"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[vendor_number]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="vendor_number"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_number]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[vendor_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="vendor_name"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[item_no]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="item_no"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[item_no]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[im_desc]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="500"
+                          cachedName="im_desc"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[im_desc]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[bottle_volume_ml]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="bottle_volume_ml"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[bottle_volume_ml]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[sales_bottles]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="sales_bottles"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_bottles]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[sales_dollars]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="sales_dollars"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_dollars]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input].Columns[sales_liters]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="sales_liters"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_liters]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_invoice_id]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_invoice_id]"
+                          name="clean_invoice_id"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,30,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[invoice_id]}) ? (DT_WSTR,30)"" : [TRIM]((DT_WSTR,30)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[invoice_id]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,30,65001)(ISNULL(invoice_id) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)invoice_id))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_ordered_on]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_ordered_on]"
+                          name="clean_ordered_on"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,20,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[ordered_on]}) ? (DT_WSTR,20)"" : [TRIM]((DT_WSTR,20)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[ordered_on]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,20,65001)(ISNULL(ordered_on) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)ordered_on))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_no]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_no]"
+                          name="clean_store_no"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,20,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_no]}) ? (DT_WSTR,20)"" : [TRIM]((DT_WSTR,20)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_no]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,20,65001)(ISNULL(store_no) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)store_no))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_name]"
+                          name="clean_store_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,255,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_name]}) ? (DT_WSTR,255)"" : [TRIM]((DT_WSTR,255)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_name]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,255,65001)(ISNULL(store_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)store_name))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_city]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_city]"
+                          name="clean_store_city"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,100,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]}) ? NULL(DT_WSTR,100) : ([LEN]([TRIM]((DT_WSTR,100)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]})) == 0 ? NULL(DT_WSTR,100) : [TRIM]((DT_WSTR,100)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]})))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,100,65001)(ISNULL(store_city) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)store_city)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)store_city)))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_county_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_county_name]"
+                          name="clean_county_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,100,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]}) ? NULL(DT_WSTR,100) : ([LEN]([TRIM]((DT_WSTR,100)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]})) == 0 ? NULL(DT_WSTR,100) : [TRIM]((DT_WSTR,100)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]})))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,100,65001)(ISNULL(county_name) ? NULL(DT_WSTR,100) : (LEN(TRIM((DT_WSTR,100)county_name)) == 0 ? NULL(DT_WSTR,100) : TRIM((DT_WSTR,100)county_name)))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_category_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_category_name]"
+                          name="clean_category_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,255,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_name]}) ? (DT_WSTR,255)"" : [TRIM]((DT_WSTR,255)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_name]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,255,65001)(ISNULL(category_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)category_name))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_number]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_number]"
+                          name="clean_vendor_number"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,20,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_number]}) ? (DT_WSTR,20)"" : [TRIM]((DT_WSTR,20)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_number]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,20,65001)(ISNULL(vendor_number) ? (DT_WSTR,20)"" : TRIM((DT_WSTR,20)vendor_number))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_name]"
+                          name="clean_vendor_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,255,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_name]}) ? (DT_WSTR,255)"" : [TRIM]((DT_WSTR,255)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_name]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,255,65001)(ISNULL(vendor_name) ? (DT_WSTR,255)"" : TRIM((DT_WSTR,255)vendor_name))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_item_no]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_item_no]"
+                          name="clean_item_no"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,30,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[item_no]}) ? (DT_WSTR,30)"" : [TRIM]((DT_WSTR,30)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[item_no]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,30,65001)(ISNULL(item_no) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)item_no))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_im_desc]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="500"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_im_desc]"
+                          name="clean_im_desc"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,500,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[im_desc]}) ? (DT_WSTR,500)"" : [TRIM]((DT_WSTR,500)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[im_desc]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,500,65001)(ISNULL(im_desc) ? (DT_WSTR,500)"" : TRIM((DT_WSTR,500)im_desc))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_bottle_volume_ml]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_bottle_volume_ml]"
+                          name="clean_bottle_volume_ml"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,30,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[bottle_volume_ml]}) ? (DT_WSTR,30)"" : [TRIM]((DT_WSTR,30)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[bottle_volume_ml]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,30,65001)(ISNULL(bottle_volume_ml) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)bottle_volume_ml))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_bottles]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_bottles]"
+                          name="clean_sales_bottles"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,30,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_bottles]}) ? (DT_WSTR,30)"" : [TRIM]((DT_WSTR,30)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_bottles]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,30,65001)(ISNULL(sales_bottles) ? (DT_WSTR,30)"" : TRIM((DT_WSTR,30)sales_bottles))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_dollars]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_dollars]"
+                          name="clean_sales_dollars"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,50,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_dollars]}) ? (DT_WSTR,50)"" : [TRIM]((DT_WSTR,50)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_dollars]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,50,65001)(ISNULL(sales_dollars) ? (DT_WSTR,50)"" : TRIM((DT_WSTR,50)sales_dollars))</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_liters]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_liters]"
+                          name="clean_sales_liters"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,50,65001)([ISNULL](#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_liters]}) ? (DT_WSTR,50)"" : [TRIM]((DT_WSTR,50)#{Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_liters]}))</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,50,65001)(ISNULL(sales_liters) ? (DT_WSTR,50)"" : TRIM((DT_WSTR,50)sales_liters))</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source"
+                  componentClassID="Microsoft.FlatFileSource"
+                  contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Flat File Source"
+                  localeId="1066"
+                  name="Flat File Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Boolean"
+                      description="Specifies whether zero-length columns are treated as null."
+                      name="RetainNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of an output column containing the file name. If no name is specified, no output column containing the file name will be generated."
+                      name="FileNameColumnName"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Connections[FlatFileConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager]"
+                      connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager]"
+                      name="FlatFileConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output]"
+                      name="Flat File Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[invoice_id]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[invoice_id]"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[invoice_id]"
+                          name="invoice_id"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[ordered_on]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[ordered_on]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[ordered_on]"
+                          name="ordered_on"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_no]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_no]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_no]"
+                          name="store_no"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_name]"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_name]"
+                          name="store_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_address]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_address]"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_address]"
+                          name="store_address"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_city]"
+                          length="100"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_city]"
+                          name="store_city"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_zip_code]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_zip_code]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[store_zip_code]"
+                          name="store_zip_code"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_fips_code]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[county_fips_code]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_fips_code]"
+                          name="county_fips_code"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[county_name]"
+                          length="100"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[county_name]"
+                          name="county_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_code]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[category_code]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_code]"
+                          name="category_code"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[category_name]"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[category_name]"
+                          name="category_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_number]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[vendor_number]"
+                          length="20"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_number]"
+                          name="vendor_number"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_name]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[vendor_name]"
+                          length="255"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[vendor_name]"
+                          name="vendor_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[item_no]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[item_no]"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[item_no]"
+                          name="item_no"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[im_desc]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[im_desc]"
+                          length="500"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[im_desc]"
+                          name="im_desc"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[pack]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[pack]"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[pack]"
+                          name="pack"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[bottle_volume_ml]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[bottle_volume_ml]"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[bottle_volume_ml]"
+                          name="bottle_volume_ml"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[state_bottle_cost]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[state_bottle_cost]"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[state_bottle_cost]"
+                          name="state_bottle_cost"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[state_bottle_retail]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[state_bottle_retail]"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[state_bottle_retail]"
+                          name="state_bottle_retail"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_bottles]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_bottles]"
+                          length="30"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_bottles]"
+                          name="sales_bottles"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_dollars]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_dollars]"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_dollars]"
+                          name="sales_dollars"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_liters]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_liters]"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_liters]"
+                          name="sales_liters"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_gallons]"
+                          codePage="65001"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_gallons]"
+                          length="50"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].Columns[sales_gallons]"
+                          name="sales_gallons"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the data is in binary format."
+                              name="UseBinaryFormat">false</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[invoice_id]"
+                          codePage="65001"
+                          dataType="str"
+                          length="30"
+                          name="invoice_id" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[ordered_on]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="ordered_on" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_no]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="store_no" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_name]"
+                          codePage="65001"
+                          dataType="str"
+                          length="255"
+                          name="store_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_address]"
+                          codePage="65001"
+                          dataType="str"
+                          length="255"
+                          name="store_address" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_city]"
+                          codePage="65001"
+                          dataType="str"
+                          length="100"
+                          name="store_city" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[store_zip_code]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="store_zip_code" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[county_fips_code]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="county_fips_code" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[county_name]"
+                          codePage="65001"
+                          dataType="str"
+                          length="100"
+                          name="county_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[category_code]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="category_code" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[category_name]"
+                          codePage="65001"
+                          dataType="str"
+                          length="255"
+                          name="category_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[vendor_number]"
+                          codePage="65001"
+                          dataType="str"
+                          length="20"
+                          name="vendor_number" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[vendor_name]"
+                          codePage="65001"
+                          dataType="str"
+                          length="255"
+                          name="vendor_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[item_no]"
+                          codePage="65001"
+                          dataType="str"
+                          length="30"
+                          name="item_no" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[im_desc]"
+                          codePage="65001"
+                          dataType="str"
+                          length="500"
+                          name="im_desc" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[pack]"
+                          codePage="65001"
+                          dataType="str"
+                          length="30"
+                          name="pack" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[bottle_volume_ml]"
+                          codePage="65001"
+                          dataType="str"
+                          length="30"
+                          name="bottle_volume_ml" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[state_bottle_cost]"
+                          codePage="65001"
+                          dataType="str"
+                          length="50"
+                          name="state_bottle_cost" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[state_bottle_retail]"
+                          codePage="65001"
+                          dataType="str"
+                          length="50"
+                          name="state_bottle_retail" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_bottles]"
+                          codePage="65001"
+                          dataType="str"
+                          length="30"
+                          name="sales_bottles" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_dollars]"
+                          codePage="65001"
+                          dataType="str"
+                          length="50"
+                          name="sales_dollars" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_liters]"
+                          codePage="65001"
+                          dataType="str"
+                          length="50"
+                          name="sales_liters" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[sales_gallons]"
+                          codePage="65001"
+                          dataType="str"
+                          length="50"
+                          name="sales_gallons" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output]"
+                      isErrorOut="true"
+                      name="Flat File Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                          codePage="65001"
+                          dataType="text"
+                          description="Flat File Source Error Output Column"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                          name="Flat File Source Error Output Column" />
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[stg].[LiquorSalesRaw]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">65001</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">true</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS,ROWS_PER_BATCH = 100000</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">100000</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost,55753.IowaLiquorDW]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost,55753.IowaLiquorDW]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_invoice_id]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="clean_invoice_id"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[invoice_id]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_invoice_id]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_ordered_on]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="clean_ordered_on"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ordered_on]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_ordered_on]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_store_no]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="clean_store_no"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_no]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_no]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_store_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="clean_store_name"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_name]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_store_city]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="clean_store_city"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_city]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_store_city]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_county_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="clean_county_name"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[county_name]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_county_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_category_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="clean_category_name"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[category_name]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_category_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_vendor_number]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="clean_vendor_number"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[vendor_number]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_number]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_vendor_name]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="255"
+                          cachedName="clean_vendor_name"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[vendor_name]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_vendor_name]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_item_no]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="clean_item_no"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[item_no]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_item_no]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_im_desc]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="500"
+                          cachedName="clean_im_desc"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[im_desc]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_im_desc]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_bottle_volume_ml]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="clean_bottle_volume_ml"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[bottle_volume_ml]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_bottle_volume_ml]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_sales_bottles]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="30"
+                          cachedName="clean_sales_bottles"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_bottles]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_bottles]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_sales_dollars]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="clean_sales_dollars"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_dollars]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_dollars]" />
+                        <inputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[clean_sales_liters]"
+                          cachedCodepage="65001"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="clean_sales_liters"
+                          externalMetadataColumnId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_liters]"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output].Columns[clean_sales_liters]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[invoice_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="30"
+                          name="invoice_id" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ordered_on]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="ordered_on" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_no]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="store_no" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="255"
+                          name="store_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[store_city]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="store_city" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[county_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="county_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[category_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="255"
+                          name="category_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[vendor_number]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="vendor_number" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[vendor_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="255"
+                          name="vendor_name" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[item_no]"
+                          codePage="1252"
+                          dataType="str"
+                          length="30"
+                          name="item_no" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[im_desc]"
+                          codePage="1252"
+                          dataType="str"
+                          length="500"
+                          name="im_desc" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[bottle_volume_ml]"
+                          codePage="1252"
+                          dataType="str"
+                          length="30"
+                          name="bottle_volume_ml" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_bottles]"
+                          codePage="1252"
+                          dataType="str"
+                          length="30"
+                          name="sales_bottles" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_dollars]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="sales_dollars" />
+                        <externalMetadataColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[sales_liters]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="sales_liters" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Loop Source Files\Clean and Load Raw.Paths[Derived Column Output]"
+                  endId="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Derived Column Output"
+                  startId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Loop Source Files\Clean and Load Raw.Paths[Flat File Source Output]"
+                  endId="Package\Loop Source Files\Clean and Load Raw\Derived Column.Inputs[Derived Column Input]"
+                  name="Flat File Source Output"
+                  startId="Package\Loop Source Files\Clean and Load Raw\Flat File Source.Outputs[Flat File Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{9518D5E8-E92D-4C68-9FA1-9757EE669BAF}"
+          DTS:ObjectName="{9518D5E8-E92D-4C68-9FA1-9757EE669BAF}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::FilePath" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{497FF2DA-0D62-41D2-B17D-3C66AA260CEA}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{8C1530DB-E446-4B78-B080-F17F62FF5445}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE stg.LiquorSalesRaw;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{7B9AFE1E-E9B1-489E-9DBD-2A7C82F91139}"
+      DTS:From="Package\Create Database"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Drop Existing Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{EE5BA94A-1CD6-4AFA-827B-917521487701}"
+      DTS:From="Package\Drop Existing Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Create Raw Table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{F3BAE70A-DF50-4A48-8A6A-A34B0F96BAC2}"
+      DTS:From="Package\Create Raw Table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Create Dimension Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{9F770645-893A-4CF4-B2C7-1FFFA01FDE11}"
+      DTS:From="Package\Create Dimension Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Create Fact Table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{C843FDF0-79E6-432F-8631-1A5B653807A4}"
+      DTS:From="Package\Create Fact Table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Truncate" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{E733BD89-DF7F-476E-8955-A6B7C3CA97AB}"
+      DTS:From="Package\Truncate"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Loop Source Files" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="162,42"
+          Id="Package\Create Database"
+          TopLeft="31,38" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Drop Existing Tables"
+          TopLeft="29,113" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="113,80">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33"
+              Start="0,0"
+              End="0,25.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="167,42"
+          Id="Package\Create Raw Table"
+          TopLeft="29,206" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="113.25,155">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,51"
+              Start="0,0"
+              End="0,43.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,43.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="203,42"
+          Id="Package\Create Dimension Tables"
+          TopLeft="241,282" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="112.5,248">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="230,34"
+              Start="0,0"
+              End="230,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,13" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,13"
+                    Point2="0,17"
+                    Point3="4,17" />
+                  <mssgle:LineSegment
+                    End="226,17" />
+                  <mssgle:CubicBezierSegment
+                    Point1="226,17"
+                    Point2="230,17"
+                    Point3="230,21" />
+                  <mssgle:LineSegment
+                    End="230,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Create Fact Table"
+          TopLeft="508,286" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="444,305">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="64,0"
+              Start="0,0"
+              End="56.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="56.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="122,42"
+          Id="Package\Truncate"
+          TopLeft="508,374" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="593,328">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-24,46"
+              Start="0,0"
+              End="-24,38.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19"
+                    Point2="0,23"
+                    Point3="-4,23" />
+                  <mssgle:LineSegment
+                    End="-20,23" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-20,23"
+                    Point2="-24,23"
+                    Point3="-24,27" />
+                  <mssgle:LineSegment
+                    End="-24,38.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="181,42"
+          Id="Package\Loop Source Files\Clean and Load Raw"
+          TopLeft="41,25" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="286,121"
+          Size="286,164"
+          Id="Package\Loop Source Files"
+          TopLeft="471,471" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="569,416">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="45,55"
+              Start="0,0"
+              End="45,47.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.5"
+                    Point2="0,27.5"
+                    Point3="4,27.5" />
+                  <mssgle:LineSegment
+                    End="41,27.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="41,27.5"
+                    Point2="45,27.5"
+                    Point3="45,31.5" />
+                  <mssgle:LineSegment
+                    End="45,47.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Loop Source Files\Clean and Load Raw">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="156,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\Flat File Source"
+          TopLeft="380,146" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\Derived Column"
+          TopLeft="385,244" />
+        <EdgeLayout
+          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Flat File Source Output]"
+          TopLeft="461,188">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="177,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination"
+          TopLeft="385,346" />
+        <EdgeLayout
+          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Derived Column Output]"
+          TopLeft="464,286">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="9.5,60"
+              Start="0,0"
+              End="9.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="5.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="5.5,30"
+                    Point2="9.5,30"
+                    Point3="9.5,34" />
+                  <mssgle:LineSegment
+                    End="9.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
