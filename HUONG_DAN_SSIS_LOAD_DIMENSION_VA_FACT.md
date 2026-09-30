@@ -577,43 +577,138 @@ Task chuẩn bị đã xác nhận toàn bộ dữ liệu hợp lệ trước kh
 
 ## 15. Cấu hình bốn Lookup
 
-Tất cả Lookup sử dụng:
+Mở package `03_Load_Fact.dtsx`, sau đó nhấp đúp vào Data Flow Task:
 
 ```text
-Connection type = OLE DB connection manager
-Cache mode      = Full cache
+02 - DFT Load Fact
+```
+
+Màn hình phải chuyển từ tab `Control Flow` sang tab `Data Flow`. Tại đây đã có component `SRC - Typed Raw` từ bước trước.
+
+Tất cả bốn Lookup đều sử dụng:
+
+```text
+Connection type     = OLE DB connection manager
+Cache mode          = Full cache
 No matching entries = Fail component
 ```
 
-Full cache phù hợp vì các Dimension chỉ có vài trăm tới vài nghìn dòng. Chọn `Fail component` để package dừng ngay nếu một business key không tìm thấy trong Dimension; đây là dấu hiệu Dimension được nạp thiếu hoặc cấu hình Lookup sai.
+Full cache phù hợp vì các Dimension chỉ có vài trăm tới vài nghìn dòng. `Fail component` làm package dừng ngay nếu một business key không tìm thấy trong Dimension; đây là dấu hiệu Dimension được nạp thiếu hoặc Lookup nối sai cột.
 
 ### 15.1. Lookup Date
 
-Tên component:
+#### 15.1.1. Thêm component và nối Source
+
+1. Trong cửa sổ `SSIS Toolbox`, mở nhóm `Common` hoặc `Other Transforms`.
+2. Tìm component `Lookup`.
+3. Kéo `Lookup` vào vùng thiết kế Data Flow, đặt bên phải `SRC - Typed Raw`.
+4. Nhấp một lần vào `SRC - Typed Raw`.
+5. Kéo mũi tên màu xanh từ `SRC - Typed Raw` sang component `Lookup` vừa tạo.
+6. Nhấp vào tên component hoặc nhấn `F2`, đổi tên thành:
 
 ```text
 LKP - Date
 ```
 
-Reference table:
+7. Nhấp đúp vào `LKP - Date` để mở `Lookup Transformation Editor`.
+
+#### 15.1.2. Trang General
+
+Trong danh sách bên trái, bấm `General`, sau đó chọn:
+
+| Vị trí cần bấm | Giá trị cần chọn |
+|---|---|
+| `Cache mode` | `Full cache` |
+| `Connection type` | `OLE DB connection manager` |
+| `Specify how to handle rows with no matching entries` | `Fail component` |
+
+Không chọn `Redirect rows to no match output`; hướng dẫn này xử lý lỗi bằng cách dừng package.
+
+#### 15.1.3. Trang Connection
+
+1. Trong danh sách bên trái, bấm `Connection`.
+2. Tại `OLE DB connection manager`, mở danh sách và chọn:
+
+```text
+CM_IowaLiquorDW
+```
+
+3. Chọn tùy chọn `Use a table or a view`.
+4. Mở danh sách `Name of the table or the view`.
+5. Chọn:
 
 ```text
 [dbo].[DIM_DATE]
 ```
 
-Join:
+Nếu không thấy bảng, kiểm tra Connection Manager có trỏ đúng database `IowaLiquorDW` hay không, sau đó bấm `Refresh` hoặc đóng và mở lại editor.
+
+#### 15.1.4. Trang Columns
+
+1. Trong danh sách bên trái, bấm `Columns`.
+2. Khung `Available Input Columns` bên trái là dữ liệu từ Raw.
+3. Khung `Available Lookup Columns` bên phải là dữ liệu của `DIM_DATE`.
+4. Giữ chuột vào cột `ordered_on` ở khung trái.
+5. Kéo và thả nó vào cột `ordered_on` ở khung phải.
+6. Xác nhận giữa hai cột xuất hiện một đường nối.
+
+Đường nối phải là:
 
 ```text
 Input ordered_on -> Reference ordered_on
 ```
 
-Chọn output:
+7. Trong khung phải, đánh dấu checkbox cạnh cột `date_key`.
+8. Ở bảng phía dưới, kiểm tra:
+
+```text
+Lookup column   = date_key
+Lookup operation = Add as new column
+Output alias    = date_key
+```
+
+9. Bấm `OK` để đóng editor.
+
+Sau bước này, output của `LKP - Date` có thêm cột:
 
 ```text
 date_key
 ```
 
 ### 15.2. Lookup Store
+
+#### 15.2.1. Thêm và nối Lookup
+
+1. Kéo một component `Lookup` mới từ `SSIS Toolbox` vào bên phải `LKP - Date`.
+2. Nhấp vào `LKP - Date` và kéo mũi tên xanh sang Lookup mới.
+3. Nếu cửa sổ `Input Output Selection` xuất hiện, tại `Output` chọn `Lookup Match Output`, rồi bấm `OK`.
+4. Đổi tên component thành:
+
+```text
+LKP - Store
+```
+
+5. Nhấp đúp vào `LKP - Store`.
+
+#### 15.2.2. General và Connection
+
+1. Trang `General`: chọn `Full cache`, `OLE DB connection manager` và `Fail component`.
+2. Trang `Connection`: chọn `CM_IowaLiquorDW`.
+3. Chọn `Use a table or a view`.
+4. Chọn bảng:
+
+```text
+[dbo].[DIM_STORE]
+```
+
+#### 15.2.3. Columns
+
+1. Bấm `Columns` ở danh sách bên trái.
+2. Kéo `store_no` từ `Available Input Columns` sang `store_no` trong `Available Lookup Columns`.
+3. Đánh dấu checkbox cạnh `store_key` ở khung phải.
+4. Kiểm tra `Lookup operation` là `Add as new column`.
+5. Đặt `Output alias` là `store_key`.
+6. Bấm `OK`.
 
 ```text
 Input store_no -> Reference store_no
@@ -622,19 +717,102 @@ Output         -> store_key
 
 ### 15.3. Lookup Product
 
+#### 15.3.1. Thêm và nối Lookup
+
+1. Kéo một `Lookup` mới vào bên phải `LKP - Store`.
+2. Kéo mũi tên xanh từ `LKP - Store` sang Lookup mới.
+3. Nếu được hỏi output, chọn `Lookup Match Output`.
+4. Đổi tên thành `LKP - Product`.
+5. Nhấp đúp để mở editor.
+
+#### 15.3.2. General và Connection
+
+1. Trang `General`: chọn `Full cache`, `OLE DB connection manager` và `Fail component`.
+2. Trang `Connection`: chọn `CM_IowaLiquorDW`.
+3. Chọn `Use a table or a view`.
+4. Chọn:
+
+```text
+[dbo].[DIM_PRODUCT]
+```
+
+#### 15.3.3. Columns
+
+1. Kéo `item_no` ở khung trái sang `item_no` ở khung phải.
+2. Đánh dấu checkbox cạnh `product_key`.
+3. Chọn `Add as new column` và đặt `Output alias = product_key`.
+4. Bấm `OK`.
+
 ```text
 Input item_no -> Reference item_no
 Output        -> product_key
 ```
 
+Không chọn tên `item_key`; database và Fact hiện sử dụng `product_key`.
+
 ### 15.4. Lookup Vendor
+
+#### 15.4.1. Thêm và nối Lookup
+
+1. Kéo một `Lookup` mới vào bên phải `LKP - Product`.
+2. Kéo mũi tên xanh từ `LKP - Product` sang Lookup mới.
+3. Nếu được hỏi output, chọn `Lookup Match Output`.
+4. Đổi tên thành `LKP - Vendor`.
+5. Nhấp đúp để mở editor.
+
+#### 15.4.2. General và Connection
+
+1. Trang `General`: chọn `Full cache`, `OLE DB connection manager` và `Fail component`.
+2. Trang `Connection`: chọn `CM_IowaLiquorDW`.
+3. Chọn `Use a table or a view`.
+4. Chọn:
+
+```text
+[dbo].[DIM_VENDOR]
+```
+
+#### 15.4.3. Columns
+
+1. Kéo `vendor_number` ở khung trái sang `vendor_number` ở khung phải.
+2. Đánh dấu checkbox cạnh `vendor_key`.
+3. Chọn `Add as new column` và đặt `Output alias = vendor_key`.
+4. Bấm `OK`.
 
 ```text
 Input vendor_number -> Reference vendor_number
 Output               -> vendor_key
 ```
 
-Nối Match Output theo đúng thứ tự Date -> Store -> Product -> Vendor.
+### 15.5. Kiểm tra chuỗi Lookup hoàn chỉnh
+
+Sau khi cấu hình xong, Data Flow phải có đúng thứ tự:
+
+```text
+SRC - Typed Raw
+        |
+        v
+LKP - Date
+        |
+        v
+LKP - Store
+        |
+        v
+LKP - Product
+        |
+        v
+LKP - Vendor
+```
+
+Nhấp đúp lại từng Lookup và mở trang `Columns` để kiểm tra:
+
+| Component | Đường join | Cột được đánh dấu làm output |
+|---|---|---|
+| `LKP - Date` | `ordered_on -> ordered_on` | `date_key` |
+| `LKP - Store` | `store_no -> store_no` | `store_key` |
+| `LKP - Product` | `item_no -> item_no` | `product_key` |
+| `LKP - Vendor` | `vendor_number -> vendor_number` | `vendor_key` |
+
+Sau `LKP - Vendor`, pipeline phải có đủ bốn cột khóa `date_key`, `store_key`, `product_key` và `vendor_key`. Tiếp tục kéo mũi tên xanh từ `LKP - Vendor` sang OLE DB Destination ở mục 16.
 
 ## 16. Destination nạp Fact
 
