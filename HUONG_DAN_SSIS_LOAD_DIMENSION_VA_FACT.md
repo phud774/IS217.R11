@@ -18,7 +18,7 @@ Mục tiêu của giai đoạn này là:
    - `dbo.DIM_VENDOR`
 3. Tra cứu surrogate key của từng Dimension.
 4. Nạp `dbo.FACT_LIQUOR_SALES`.
-5. Chuyển các dòng không hợp lệ hoặc Lookup không thành công sang bảng Reject.
+5. Dừng package nếu dữ liệu không hợp lệ hoặc Lookup không thành công.
 6. Kiểm tra số dòng và tổng các measure sau khi hoàn tất.
 
 Tài liệu sử dụng chiến lược **full load** phù hợp với project hiện tại: Raw được nạp lại đầy đủ, sau đó Dimension và Fact được xóa dữ liệu cũ và nạp lại. Package setup không được chạy hằng ngày vì package đó drop toàn bộ bảng.
@@ -71,18 +71,12 @@ stg.LiquorSalesRaw
         |
         +--> 03_Load_Fact.dtsx
                 |
-                +--> Conditional Split
-                |       +--> dòng sai -> stg.LiquorSalesReject
-                |       |
-                |       +--> dòng hợp lệ
-                |               |
-                |               +--> Lookup DIM_DATE
-                |               +--> Lookup DIM_STORE
-                |               +--> Lookup DIM_PRODUCT
-                |               +--> Lookup DIM_VENDOR
-                |                       |
-                |                       +--> FACT_LIQUOR_SALES
-                |                       +--> no match -> Reject
+                +--> kiểm tra dữ liệu Raw
+                +--> Lookup DIM_DATE
+                +--> Lookup DIM_STORE
+                +--> Lookup DIM_PRODUCT
+                +--> Lookup DIM_VENDOR
+                +--> FACT_LIQUOR_SALES
                 |
                 +--> kiểm tra kết quả
 ```
@@ -143,46 +137,7 @@ product_key
 
 DBML cũ có thể đang dùng `item_key`. Trong toàn bộ SSIS và tài liệu này phải dùng thống nhất `product_key`.
 
-## 5. Bổ sung bảng Reject
-
-Trong package setup, bổ sung bảng sau. Nếu chưa muốn sửa package setup, có thể đặt câu lệnh này trong một Execute SQL Task đầu package Fact.
-
-```sql
-USE IowaLiquorDW;
-
-IF SCHEMA_ID('stg') IS NULL
-BEGIN
-    EXEC('CREATE SCHEMA stg');
-END;
-
-IF OBJECT_ID('stg.LiquorSalesReject', 'U') IS NULL
-BEGIN
-    CREATE TABLE stg.LiquorSalesReject
-    (
-        reject_key      bigint IDENTITY(1,1) NOT NULL
-            CONSTRAINT PK_LiquorSalesReject PRIMARY KEY,
-        invoice_id      varchar(30)  NULL,
-        ordered_on      varchar(20)  NULL,
-        store_no        varchar(20)  NULL,
-        vendor_number   varchar(20)  NULL,
-        item_no         varchar(30)  NULL,
-        sales_bottles   varchar(30)  NULL,
-        sales_dollars   varchar(50)  NULL,
-        sales_liters    varchar(50)  NULL,
-        error_reason    varchar(100) NOT NULL,
-        rejected_at     datetime2(0) NOT NULL
-            CONSTRAINT DF_LiquorSalesReject_rejected_at DEFAULT SYSDATETIME()
-    );
-END;
-```
-
-Nếu package setup có task drop table, thêm dòng sau trước khi drop Raw:
-
-```sql
-DROP TABLE IF EXISTS stg.LiquorSalesReject;
-```
-
-## 6. Tạo package `02_Load_Dimensions.dtsx`
+## 5. Tạo package `02_Load_Dimensions.dtsx`
 
 Trong `Solution Explorer`:
 
@@ -215,7 +170,7 @@ Control Flow:
 
 Nối các task bằng precedence constraint màu xanh `Success`.
 
-## 7. Task 01 - Xóa dữ liệu Fact và Dimension cũ
+## 6. Task 01 - Xóa dữ liệu Fact và Dimension cũ
 
 Tạo Execute SQL Task tên:
 
@@ -249,9 +204,9 @@ DBCC CHECKIDENT ('dbo.DIM_STORE', RESEED, 0);
 
 Fact phải được xóa trước vì đang tham chiếu các Dimension. Không thể `TRUNCATE` trực tiếp một Dimension đang được khóa ngoại tham chiếu.
 
-## 8. Data Flow nạp `DIM_DATE`
+## 7. Data Flow nạp `DIM_DATE`
 
-### 8.1. Tạo Data Flow
+### 7.1. Tạo Data Flow
 
 Tạo Data Flow Task tên:
 
@@ -265,7 +220,7 @@ Bên trong Data Flow tạo:
 SRC - Distinct Dates -> DST - DIM_DATE
 ```
 
-### 8.2. OLE DB Source
+### 7.2. OLE DB Source
 
 Chọn `SQL command` và dùng truy vấn:
 
@@ -288,7 +243,7 @@ SELECT
 FROM src;
 ```
 
-### 8.3. OLE DB Destination
+### 7.3. OLE DB Destination
 
 Cấu hình:
 
@@ -307,7 +262,7 @@ Kết quả mong đợi:
 316 dòng
 ```
 
-## 9. Data Flow nạp `DIM_STORE`
+## 8. Data Flow nạp `DIM_STORE`
 
 Tạo Data Flow Task tên:
 
@@ -373,7 +328,7 @@ Kết quả mong đợi:
 2.162 dòng
 ```
 
-## 10. Data Flow nạp `DIM_PRODUCT`
+## 9. Data Flow nạp `DIM_PRODUCT`
 
 Tạo Data Flow Task tên:
 
@@ -433,7 +388,7 @@ Kết quả mong đợi:
 5.211 dòng
 ```
 
-## 11. Data Flow nạp `DIM_VENDOR`
+## 10. Data Flow nạp `DIM_VENDOR`
 
 Tạo Data Flow Task tên:
 
@@ -480,7 +435,7 @@ Kết quả mong đợi:
 239 dòng
 ```
 
-## 12. Task kiểm tra Dimension
+## 11. Task kiểm tra Dimension
 
 Tạo Execute SQL Task tên:
 
@@ -506,7 +461,7 @@ IF (SELECT COUNT_BIG(*) FROM dbo.DIM_VENDOR) <> 239
 
 Các con số trên đúng với bộ CSV hiện tại. Nếu thay bộ dữ liệu nguồn, thay phần kiểm tra cố định bằng truy vấn so sánh số business key giữa Raw và Dimension.
 
-## 13. Tạo package `03_Load_Fact.dtsx`
+## 12. Tạo package `03_Load_Fact.dtsx`
 
 1. Tạo SSIS Package mới.
 2. Đổi tên thành `03_Load_Fact.dtsx`.
@@ -525,7 +480,7 @@ Control Flow:
 03 - Verify Fact
 ```
 
-## 14. Task chuẩn bị nạp Fact
+## 13. Task chuẩn bị nạp Fact
 
 Tạo Execute SQL Task:
 
@@ -544,13 +499,29 @@ BEGIN
     THROW 50020, 'Dimensions must be loaded before Fact.', 1;
 END;
 
+IF EXISTS
+(
+    SELECT 1
+    FROM stg.LiquorSalesRaw
+    WHERE NULLIF(invoice_id, '') IS NULL
+       OR NULLIF(store_no, '') IS NULL
+       OR NULLIF(item_no, '') IS NULL
+       OR NULLIF(vendor_number, '') IS NULL
+       OR TRY_CONVERT(date, ordered_on, 23) IS NULL
+       OR TRY_CONVERT(int, sales_bottles) IS NULL
+       OR TRY_CONVERT(decimal(19,2), sales_dollars) IS NULL
+       OR TRY_CONVERT(decimal(19,3), sales_liters) IS NULL
+)
+BEGIN
+    THROW 50021, 'Raw contains invalid or missing required data.', 1;
+END;
+
 TRUNCATE TABLE dbo.FACT_LIQUOR_SALES;
-TRUNCATE TABLE stg.LiquorSalesReject;
 ```
 
-`FACT_LIQUOR_SALES` có thể truncate vì không có bảng nào khác tham chiếu nó.
+`FACT_LIQUOR_SALES` có thể truncate vì không có bảng nào khác tham chiếu nó. Nếu Raw có bất kỳ dòng bắt buộc nào bị thiếu hoặc sai kiểu, task sẽ thất bại trước khi xóa và nạp lại Fact.
 
-## 15. Xây dựng Data Flow nạp Fact
+## 14. Xây dựng Data Flow nạp Fact
 
 Tạo Data Flow Task:
 
@@ -564,34 +535,22 @@ Luồng chính:
 SRC - Typed Raw
         |
         v
-SPL - Valid Rows
+    LKP - Date
         |
-        +--> Invalid Row ----------------------> DST - Reject
+        v
+    LKP - Store
         |
-        +--> Valid Row
-                |
-                v
-            LKP - Date
-                |
-                v
-            LKP - Store
-                |
-                v
-            LKP - Product
-                |
-                v
-            LKP - Vendor
-                |
-                v
-            DST - FACT_LIQUOR_SALES
-
-Mỗi No Match Output của Lookup
-        -> thêm error_reason
-        -> Union All
-        -> DST - Reject
+        v
+    LKP - Product
+        |
+        v
+    LKP - Vendor
+        |
+        v
+DST - FACT_LIQUOR_SALES
 ```
 
-### 15.1. OLE DB Source chuyển kiểu
+### 14.1. OLE DB Source chuyển kiểu
 
 Đặt tên:
 
@@ -604,72 +563,31 @@ Chọn `SQL command`:
 ```sql
 SELECT
     invoice_id,
-    ordered_on AS ordered_on_raw,
     store_no,
     vendor_number,
     item_no,
-    sales_bottles AS sales_bottles_raw,
-    sales_dollars AS sales_dollars_raw,
-    sales_liters AS sales_liters_raw,
-
     TRY_CONVERT(date, ordered_on, 23) AS ordered_on,
     TRY_CONVERT(int, sales_bottles) AS sales_bottles,
     TRY_CONVERT(decimal(19,2), sales_dollars) AS sales_dollars,
-    TRY_CONVERT(decimal(19,3), sales_liters) AS sales_liters,
-
-    CONVERT(varchar(100),
-        CASE
-            WHEN NULLIF(invoice_id, '') IS NULL THEN 'EMPTY_INVOICE_ID'
-            WHEN TRY_CONVERT(date, ordered_on, 23) IS NULL THEN 'INVALID_ORDERED_ON'
-            WHEN NULLIF(store_no, '') IS NULL THEN 'EMPTY_STORE_NO'
-            WHEN NULLIF(item_no, '') IS NULL THEN 'EMPTY_ITEM_NO'
-            WHEN NULLIF(vendor_number, '') IS NULL THEN 'EMPTY_VENDOR_NUMBER'
-            WHEN TRY_CONVERT(int, sales_bottles) IS NULL THEN 'INVALID_SALES_BOTTLES'
-            WHEN TRY_CONVERT(decimal(19,2), sales_dollars) IS NULL THEN 'INVALID_SALES_DOLLARS'
-            WHEN TRY_CONVERT(decimal(19,3), sales_liters) IS NULL THEN 'INVALID_SALES_LITERS'
-            ELSE NULL
-        END
-    ) AS error_reason
+    TRY_CONVERT(decimal(19,3), sales_liters) AS sales_liters
 FROM stg.LiquorSalesRaw;
 ```
 
-`TRY_CONVERT` không làm Data Flow dừng khi gặp giá trị sai. Dòng sai nhận `error_reason` và đi sang Reject.
+Task chuẩn bị đã xác nhận toàn bộ dữ liệu hợp lệ trước khi Data Flow chạy. `TRY_CONVERT` ở Source giúp SSIS nhận metadata đầu ra đúng kiểu `date`, `int` và `decimal`.
 
-### 15.2. Conditional Split
-
-Thêm Conditional Split tên:
-
-```text
-SPL - Valid Rows
-```
-
-Tạo output:
-
-| Output name | Condition |
-|---|---|
-| `Invalid Row` | `!ISNULL(error_reason)` |
-
-Đặt `Default output name` thành:
-
-```text
-Valid Row
-```
-
-Nối `Invalid Row` vào destination Reject. Nối `Valid Row` vào Lookup đầu tiên.
-
-## 16. Cấu hình bốn Lookup
+## 15. Cấu hình bốn Lookup
 
 Tất cả Lookup sử dụng:
 
 ```text
 Connection type = OLE DB connection manager
 Cache mode      = Full cache
-No matching entries = Redirect rows to no match output
+No matching entries = Fail component
 ```
 
-Full cache phù hợp vì các Dimension chỉ có vài trăm tới vài nghìn dòng.
+Full cache phù hợp vì các Dimension chỉ có vài trăm tới vài nghìn dòng. Chọn `Fail component` để package dừng ngay nếu một business key không tìm thấy trong Dimension; đây là dấu hiệu Dimension được nạp thiếu hoặc cấu hình Lookup sai.
 
-### 16.1. Lookup Date
+### 15.1. Lookup Date
 
 Tên component:
 
@@ -695,21 +613,21 @@ Chọn output:
 date_key
 ```
 
-### 16.2. Lookup Store
+### 15.2. Lookup Store
 
 ```text
 Input store_no -> Reference store_no
 Output         -> store_key
 ```
 
-### 16.3. Lookup Product
+### 15.3. Lookup Product
 
 ```text
 Input item_no -> Reference item_no
 Output        -> product_key
 ```
 
-### 16.4. Lookup Vendor
+### 15.4. Lookup Vendor
 
 ```text
 Input vendor_number -> Reference vendor_number
@@ -718,42 +636,7 @@ Output               -> vendor_key
 
 Nối Match Output theo đúng thứ tự Date -> Store -> Product -> Vendor.
 
-## 17. Xử lý No Match Output
-
-Không để Lookup ở chế độ `Fail component`. Với mỗi No Match Output:
-
-1. Nối sang một Derived Column riêng.
-2. Tạo cột mới `lookup_error` kiểu chuỗi.
-3. Gán lý do tương ứng:
-
-| Lookup | `lookup_error` |
-|---|---|
-| Date | `DATE_NOT_FOUND` |
-| Store | `STORE_NOT_FOUND` |
-| Product | `PRODUCT_NOT_FOUND` |
-| Vendor | `VENDOR_NOT_FOUND` |
-
-4. Nối các nhánh lỗi vào `Union All`.
-5. Trong Union All chỉ giữ các cột cần ghi Reject.
-6. Nối Union All tới `DST - Reject`.
-
-Nếu metadata của các nhánh Lookup khác nhau, chỉ map các cột chung sau trong Union All:
-
-```text
-invoice_id
-ordered_on_raw
-store_no
-vendor_number
-item_no
-sales_bottles_raw
-sales_dollars_raw
-sales_liters_raw
-lookup_error
-```
-
-Đổi tên output `lookup_error` thành `error_reason` trước khi nối Destination hoặc map trực tiếp sang cột `error_reason`.
-
-## 18. Destination nạp Fact
+## 16. Destination nạp Fact
 
 Nối Match Output của `LKP - Vendor` vào OLE DB Destination tên:
 
@@ -787,25 +670,7 @@ Mappings:
 
 Không map `sales_key`; SQL Server tự sinh Identity.
 
-## 19. Destination nạp Reject
-
-Tạo OLE DB Destination tên:
-
-```text
-DST - Reject
-```
-
-Destination:
-
-```text
-[stg].[LiquorSalesReject]
-```
-
-Map các cột gốc dạng chuỗi và `error_reason`. Không map `reject_key` và `rejected_at` vì SQL Server tự sinh.
-
-Nhánh `Invalid Row` từ Conditional Split và các nhánh No Match có thể dùng hai Destination Reject riêng nếu việc hợp nhất metadata gây khó khăn. Cả hai Destination cùng ghi vào `stg.LiquorSalesReject` là hợp lệ.
-
-## 20. Task kiểm tra Fact
+## 17. Task kiểm tra Fact
 
 Tạo Execute SQL Task tên:
 
@@ -828,15 +693,9 @@ DECLARE @fact_rows bigint =
     FROM dbo.FACT_LIQUOR_SALES
 );
 
-DECLARE @reject_rows bigint =
-(
-    SELECT COUNT_BIG(*)
-    FROM stg.LiquorSalesReject
-);
-
-IF @raw_rows <> @fact_rows + @reject_rows
+IF @raw_rows <> @fact_rows
 BEGIN
-    THROW 50030, 'Raw rows do not equal Fact plus Reject rows.', 1;
+    THROW 50030, 'Raw and Fact row counts do not match.', 1;
 END;
 
 IF EXISTS
@@ -851,9 +710,9 @@ BEGIN
 END;
 ```
 
-## 21. Kiểm tra kết quả cuối cùng
+## 18. Kiểm tra kết quả cuối cùng
 
-### 21.1. Số dòng từng bảng
+### 18.1. Số dòng từng bảng
 
 ```sql
 SELECT 'DIM_DATE' AS table_name, COUNT_BIG(*) AS row_count FROM dbo.DIM_DATE
@@ -864,9 +723,7 @@ SELECT 'DIM_PRODUCT', COUNT_BIG(*) FROM dbo.DIM_PRODUCT
 UNION ALL
 SELECT 'DIM_VENDOR', COUNT_BIG(*) FROM dbo.DIM_VENDOR
 UNION ALL
-SELECT 'FACT_LIQUOR_SALES', COUNT_BIG(*) FROM dbo.FACT_LIQUOR_SALES
-UNION ALL
-SELECT 'LiquorSalesReject', COUNT_BIG(*) FROM stg.LiquorSalesReject;
+SELECT 'FACT_LIQUOR_SALES', COUNT_BIG(*) FROM dbo.FACT_LIQUOR_SALES;
 ```
 
 Kết quả mong đợi với bộ dữ liệu hiện tại:
@@ -878,9 +735,8 @@ Kết quả mong đợi với bộ dữ liệu hiện tại:
 | `DIM_PRODUCT` | 5.211 |
 | `DIM_VENDOR` | 239 |
 | `FACT_LIQUOR_SALES` | 2.590.975 |
-| `LiquorSalesReject` | 0 |
 
-### 21.2. Tổng các measure
+### 18.2. Tổng các measure
 
 ```sql
 SELECT
@@ -898,7 +754,7 @@ Kết quả mong đợi:
 | `total_dollars` | 447.235.413,62 |
 | `total_liters` | 23.308.430,630 |
 
-### 21.3. Kiểm tra khóa ngoại và Lookup
+### 18.3. Kiểm tra khóa ngoại và Lookup
 
 ```sql
 SELECT COUNT_BIG(*) AS orphan_rows
@@ -919,22 +775,21 @@ Kết quả mong đợi:
 0
 ```
 
-### 21.4. So sánh Raw với Fact
+### 18.4. So sánh Raw với Fact
 
 ```sql
 SELECT
     (SELECT COUNT_BIG(*) FROM stg.LiquorSalesRaw) AS raw_rows,
-    (SELECT COUNT_BIG(*) FROM dbo.FACT_LIQUOR_SALES) AS fact_rows,
-    (SELECT COUNT_BIG(*) FROM stg.LiquorSalesReject) AS reject_rows;
+    (SELECT COUNT_BIG(*) FROM dbo.FACT_LIQUOR_SALES) AS fact_rows;
 ```
 
 Điều kiện đúng:
 
 ```text
-raw_rows = fact_rows + reject_rows
+raw_rows = fact_rows
 ```
 
-## 22. Tạo package điều phối `Master.dtsx`
+## 19. Tạo package điều phối `Master.dtsx`
 
 Sau khi từng package chạy độc lập thành công, tạo `Master.dtsx` với các Execute Package Task:
 
@@ -952,23 +807,23 @@ Không đưa package setup có thao tác drop table vào Master chạy thường
 
 Nếu project thực tế vẫn chỉ có một `Package.dtsx` kết hợp setup và Load Raw, có thể dùng package đó làm bước đầu tiên trong lúc phát triển. Tuy nhiên cần nhớ mỗi lần chạy nó sẽ reset toàn bộ Dimension và Fact. Cấu trúc tốt hơn là tách setup và Load Raw thành hai package như tài liệu trước.
 
-## 23. Lỗi thường gặp
+## 20. Lỗi thường gặp
 
 | Hiện tượng | Nguyên nhân và cách xử lý |
 |---|---|
 | Vi phạm `UQ_DIM_STORE_store_no` | Source lấy `DISTINCT` toàn bộ thuộc tính thay vì chọn một dòng bằng `ROW_NUMBER()` |
 | Vi phạm `UQ_DIM_PRODUCT_item_no` | Một `item_no` có nhiều phiên bản mô tả; dùng truy vấn ranked trong tài liệu |
-| Lookup luôn trả về No Match | Kiểm tra đúng cột join, kiểu dữ liệu, khoảng trắng và thứ tự chạy Dimension trước Fact |
+| Lookup báo không tìm thấy dòng | Kiểm tra đúng cột join, kiểu dữ liệu, khoảng trắng và thứ tự chạy Dimension trước Fact |
 | Lookup báo khác kiểu dữ liệu | Business key ở cả hai phía phải là `DT_STR` có code page và độ rộng tương thích |
 | Destination Fact báo lỗi khóa ngoại | Một Lookup bị bỏ qua hoặc output key chưa được map đúng |
 | Fact bị trùng khi chạy lại | Task `TRUNCATE TABLE dbo.FACT_LIQUOR_SALES` chưa chạy hoặc precedence constraint bị sai |
 | Dimension Identity tiếp tục tăng | Thiếu `DBCC CHECKIDENT ... RESEED, 0` sau khi `DELETE` |
-| Package Fact chạy nhưng không có dòng | Conditional Split đang đảo điều kiện Valid/Invalid hoặc một Lookup redirect toàn bộ dòng |
+| Package Fact dừng tại Lookup | Business key không có trong Dimension hoặc Lookup đang nối sai cột; package chủ động dừng vì dùng `Fail component` |
 | `product_key` không xuất hiện | Lookup/Destination đang dùng tên cũ `item_key`; đổi về `product_key` |
 | Tổng tiền lệch | Kiểm tra kiểu `decimal(19,2)`, không dùng `float` cho doanh thu |
 | Data Flow chậm hoặc hết RAM | Đặt Lookup ở Full Cache chỉ cho Dimension; không Sort toàn bộ 2,59 triệu dòng trong pipeline |
 
-## 24. Tiêu chí hoàn thành
+## 21. Tiêu chí hoàn thành
 
 Giai đoạn Dimension và Fact hoàn thành khi:
 
@@ -979,22 +834,21 @@ Giai đoạn Dimension và Fact hoàn thành khi:
 - Fact có 2.590.975 dòng với bộ dữ liệu hiện tại.
 - Không có orphan foreign key.
 - Không có `invoice_id` trùng trong Fact.
-- Raw bằng Fact cộng Reject.
+- Số dòng Raw bằng số dòng Fact.
 - Tổng số chai, doanh thu và số lít khớp với Raw.
 - Package có thể chạy lại mà không nhân đôi dữ liệu.
-- Các dòng sai định dạng hoặc Lookup thất bại được ghi vào Reject, không bị mất âm thầm.
+- Package dừng rõ ràng nếu Raw có dữ liệu sai hoặc Lookup thất bại.
 
-## 25. Thứ tự thực hiện đề xuất
+## 22. Thứ tự thực hiện đề xuất
 
 ```text
-1. Bổ sung bảng stg.LiquorSalesReject
-2. Tạo 02_Load_Dimensions.dtsx
-3. Chạy và kiểm tra bốn Dimension
-4. Tạo 03_Load_Fact.dtsx
-5. Cấu hình Conditional Split và bốn Lookup
-6. Chạy và kiểm tra Fact/Reject
-7. Tạo Master.dtsx
-8. Chuyển đường dẫn và connection string thành Project Parameter
-9. Build project thành file .ispac
-10. Deploy lên SSIS Catalog khi cần
+1. Tạo 02_Load_Dimensions.dtsx
+2. Chạy và kiểm tra bốn Dimension
+3. Tạo 03_Load_Fact.dtsx
+4. Cấu hình bốn Lookup
+5. Chạy và kiểm tra Fact
+6. Tạo Master.dtsx
+7. Chuyển đường dẫn và connection string thành Project Parameter
+8. Build project thành file .ispac
+9. Deploy lên SSIS Catalog khi cần
 ```
