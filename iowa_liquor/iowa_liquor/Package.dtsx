@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="26"
-  DTS:VersionGUID="{8B6A1645-7359-46FE-98F2-256C53BDDCC1}">
+  DTS:VersionBuild="28"
+  DTS:VersionGUID="{7F8B030B-13DE-495F-8B25-415B5E27625A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -4822,33 +4822,57 @@ FROM stg.LiquorSalesRaw;</property>
       <GraphLayout
         Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
+          Size="170,42"
+          Id="Package\Clear Fact and Dimensions"
+          TopLeft="1260.42857142857,455.75" />
+        <NodeLayout
           Size="162,42"
           Id="Package\Create Database"
-          TopLeft="23.5,43" />
+          TopLeft="203.187491967343,46.4210525940165" />
         <NodeLayout
-          Size="203,42"
+          Size="202.666666666667,42"
           Id="Package\Create Dimension Tables"
-          TopLeft="707,86" />
+          TopLeft="797.624995948747,92.8421051880329" />
         <NodeLayout
           Size="170,42"
           Id="Package\Create Fact Table"
           TopLeft="1046.28571428571,82.5714285714286" />
         <NodeLayout
-          Size="167,42"
+          Size="166.666666666667,42"
           Id="Package\Create Raw Table"
-          TopLeft="499,76" />
+          TopLeft="589.624995948747,82.8421051880329" />
         <NodeLayout
           Size="170,42"
           Id="Package\Drop Existing Tables"
-          TopLeft="205,81" />
+          TopLeft="384.687491967343,84.4210525940165" />
         <NodeLayout
-          Size="181,42"
+          Size="162,42"
+          Id="Package\Load DIM_DATE"
+          TopLeft="1262,566" />
+        <NodeLayout
+          Size="186.666666666667,42"
+          Id="Package\Load DIM_PRODUCT"
+          TopLeft="745,576.25" />
+        <NodeLayout
+          Size="170.666666666667,42"
+          Id="Package\Load DIM_STORE"
+          TopLeft="987.5,573.75" />
+        <NodeLayout
+          Size="180,42"
+          Id="Package\Load DIM_VENDOR"
+          TopLeft="490,578.75" />
+        <NodeLayout
+          Size="128,42"
+          Id="Package\Load Fact"
+          TopLeft="257.5,578.75" />
+        <NodeLayout
+          Size="181.333333333334,42"
           Id="Package\Loop Source Files\Clean and Load Raw"
           TopLeft="41,25" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="286,121"
+          PanelSize="286,121.333333333334"
           Size="286,164"
           Id="Package\Loop Source Files"
           TopLeft="1209.85714285714,190.714285714286" />
@@ -4858,7 +4882,7 @@ FROM stg.LiquorSalesRaw;</property>
           TopLeft="1319.42857142857,77.4285714285714" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="185.5,58.5">
+          TopLeft="365.187491967343,61.9210525940165">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -4886,18 +4910,62 @@ FROM stg.LiquorSalesRaw;</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="375,99.5">
+          TopLeft="554.687491967343,104.631578891025">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="124,0"
+              EndConnector="34.937503981404,0"
               Start="0,0"
-              End="116.5,0">
+              End="27.437503981404,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="116.5,0" />
+                    End="27.437503981404,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="745,598.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-75,0"
+              Start="0,0"
+              End="-67.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-67.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 11]"
+          TopLeft="490,599.75">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-104.5,0"
+              Start="0,0"
+              End="-97,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-97,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4908,7 +4976,7 @@ FROM stg.LiquorSalesRaw;</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="666,97">
+          TopLeft="756.624995948747,103.842105188033">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -4942,18 +5010,30 @@ FROM stg.LiquorSalesRaw;</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="910,105.285714285714">
+          TopLeft="1000.29166261541,113.842105188033">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="136.285714285714,0"
+              EndConnector="45.9940516702965,-10.2706766166043"
               Start="0,0"
-              End="128.785714285714,0">
+              End="38.4940516702965,-10.2706766166043">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="128.785714285714,0" />
+                    End="18.9970258351482,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="18.9970258351482,0"
+                    Point2="22.9970258351482,0"
+                    Point3="22.9970258351482,-4" />
+                  <mssgle:LineSegment
+                    End="22.9970258351482,-6.27067661660433" />
+                  <mssgle:CubicBezierSegment
+                    Point1="22.9970258351482,-6.27067661660433"
+                    Point2="22.9970258351482,-10.2706766166043"
+                    Point3="26.9970258351482,-10.2706766166043" />
+                  <mssgle:LineSegment
+                    End="38.4940516702965,-10.2706766166043" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5018,10 +5098,6 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="170,42"
-          Id="Package\Clear Fact and Dimensions"
-          TopLeft="1260.42857142857,455.75" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 6]"
           TopLeft="1349.14285714286,354.714285714286">
@@ -5044,10 +5120,6 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="162,42"
-          Id="Package\Load DIM_DATE"
-          TopLeft="1262,566" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 7]"
           TopLeft="1344.21428571429,497.75">
@@ -5070,10 +5142,6 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="171,42"
-          Id="Package\Load DIM_STORE"
-          TopLeft="987.5,573.75" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 8]"
           TopLeft="1262,590.875">
@@ -5096,10 +5164,6 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="187,42"
-          Id="Package\Load DIM_PRODUCT"
-          TopLeft="745,576.25" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 9]"
           TopLeft="987.5,596">
@@ -5122,161 +5186,20 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="180,42"
-          Id="Package\Load DIM_VENDOR"
-          TopLeft="490,578.75" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 10]"
-          TopLeft="745,598.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-75,0"
-              Start="0,0"
-              End="-67.5,0">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="-67.5,0" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="128,42"
-          Id="Package\Load Fact"
-          TopLeft="257.5,578.75" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 11]"
-          TopLeft="490,599.75">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-104.5,0"
-              Start="0,0"
-              End="-97,0">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="-97,0" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
-  <TaskHost
-    design-time-name="Package\Loop Source Files\Clean and Load Raw">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="156,42"
-          Id="Package\Loop Source Files\Clean and Load Raw\Flat File Source"
-          TopLeft="380,146" />
-        <NodeLayout
-          Size="158,42"
-          Id="Package\Loop Source Files\Clean and Load Raw\Derived Column"
-          TopLeft="385,244" />
-        <EdgeLayout
-          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Flat File Source Output]"
-          TopLeft="461,188">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,56"
-              Start="0,0"
-              End="0,48.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,48.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="177,42"
-          Id="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination"
-          TopLeft="385,346" />
-        <EdgeLayout
-          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Derived Column Output]"
-          TopLeft="464,286">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="9.5,60"
-              Start="0,0"
-              End="9.5,52.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,26" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,26"
-                    Point2="0,30"
-                    Point3="4,30" />
-                  <mssgle:LineSegment
-                    End="5.5,30" />
-                  <mssgle:CubicBezierSegment
-                    Point1="5.5,30"
-                    Point2="9.5,30"
-                    Point3="9.5,34" />
-                  <mssgle:LineSegment
-                    End="9.5,52.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\Load DIM_DATE">
     <LayoutInfo>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="157,42"
+          Size="157.333333333334,42"
           Id="Package\Load DIM_DATE\OLE DB Source"
           TopLeft="500,198" />
         <NodeLayout
-          Size="177,42"
+          Size="177.333333333334,42"
           Id="Package\Load DIM_DATE\OLE DB Destination"
           TopLeft="481,334" />
         <EdgeLayout
@@ -5317,14 +5240,6 @@ FROM stg.LiquorSalesRaw;</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load DIM_DATE\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\Load DIM_DATE\OLE DB Destination">
     <Properties>
       <Property>
@@ -5337,62 +5252,11 @@ FROM stg.LiquorSalesRaw;</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\Load DIM_STORE">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="157,42"
-          Id="Package\Load DIM_STORE\OLE DB Source"
-          TopLeft="496,256" />
-        <NodeLayout
-          Size="177,42"
-          Id="Package\Load DIM_STORE\OLE DB Destination"
-          TopLeft="482,374" />
-        <EdgeLayout
-          Id="Package\Load DIM_STORE.Paths[OLE DB Source Output]"
-          TopLeft="572.5,298">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,76"
-              Start="0,0"
-              End="0,68.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,68.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load DIM_STORE\OLE DB Source">
+    design-time-name="Package\Load DIM_DATE\OLE DB Source">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\Load DIM_STORE\OLE DB Destination">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
@@ -5447,14 +5311,6 @@ FROM stg.LiquorSalesRaw;</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load DIM_PRODUCT\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\Load DIM_PRODUCT\OLE DB Destination">
     <Properties>
       <Property>
@@ -5464,6 +5320,73 @@ FROM stg.LiquorSalesRaw;</property>
         <Name>TableInfoObjectType</Name>
         <Value
           type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load DIM_PRODUCT\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load DIM_STORE">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="177.333333333334,42"
+          Id="Package\Load DIM_STORE\OLE DB Destination"
+          TopLeft="482,374" />
+        <NodeLayout
+          Size="157.333333333334,42"
+          Id="Package\Load DIM_STORE\OLE DB Source"
+          TopLeft="496,256" />
+        <EdgeLayout
+          Id="Package\Load DIM_STORE.Paths[OLE DB Source Output]"
+          TopLeft="572.5,298">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,76"
+              Start="0,0"
+              End="0,68.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,68.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load DIM_STORE\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load DIM_STORE\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
@@ -5518,14 +5441,6 @@ FROM stg.LiquorSalesRaw;</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load DIM_VENDOR\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\Load DIM_VENDOR\OLE DB Destination">
     <Properties>
       <Property>
@@ -5538,19 +5453,43 @@ FROM stg.LiquorSalesRaw;</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load DIM_VENDOR\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\Load Fact">
     <LayoutInfo>
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
+          Size="197.333333333334,42"
+          Id="Package\Load Fact\FACT_LIQUOR_SALES"
+          TopLeft="879,480" />
+        <NodeLayout
+          Size="141.333333333334,42"
+          Id="Package\Load Fact\Lookup Date"
+          TopLeft="499,287" />
+        <NodeLayout
+          Size="144,42"
+          Id="Package\Load Fact\Lookup Store"
+          TopLeft="499,400" />
+        <NodeLayout
+          Size="114.666666666667,42"
+          Id="Package\Load Fact\Lookup"
+          TopLeft="715,478" />
+        <NodeLayout
+          Size="156,42"
+          Id="Package\Load Fact\Lookup Product"
+          TopLeft="497,481" />
+        <NodeLayout
           Size="134,42"
           Id="Package\Load Fact\Typed Raw"
           TopLeft="509,202" />
-        <NodeLayout
-          Size="141,42"
-          Id="Package\Load Fact\Lookup Date"
-          TopLeft="499,287" />
         <EdgeLayout
           Id="Package\Load Fact.Paths[OLE DB Source Output]"
           TopLeft="572.75,244">
@@ -5573,94 +5512,6 @@ FROM stg.LiquorSalesRaw;</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="144,42"
-          Id="Package\Load Fact\Lookup Store"
-          TopLeft="499,400" />
-        <EdgeLayout
-          Id="Package\Load Fact.Paths[Lookup Match Output]"
-          TopLeft="570.25,329">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,71"
-              Start="0,0"
-              End="0,63.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,63.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-48.19138671875,25.9453125,96.3827734375,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="156,42"
-          Id="Package\Load Fact\Lookup Product"
-          TopLeft="497,481" />
-        <EdgeLayout
-          Id="Package\Load Fact.Paths[Lookup Match Output1]"
-          TopLeft="573,442">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,39"
-              Start="0,0"
-              End="0,31.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,31.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-48.19138671875,9.9453125,96.3827734375,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="115,42"
-          Id="Package\Load Fact\Lookup"
-          TopLeft="715,478" />
-        <EdgeLayout
-          Id="Package\Load Fact.Paths[Lookup Match Output2]"
-          TopLeft="653,500.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="62,0"
-              Start="0,0"
-              End="54.5,0">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="54.5,0" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-20.94138671875,5,96.3827734375,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="197,42"
-          Id="Package\Load Fact\FACT_LIQUOR_SALES"
-          TopLeft="879,480" />
         <EdgeLayout
           Id="Package\Load Fact.Paths[Lookup Match Output3]"
           TopLeft="830,500">
@@ -5685,14 +5536,91 @@ FROM stg.LiquorSalesRaw;</property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.Paths[Lookup Match Output2]"
+          TopLeft="653,500.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="62,0"
+              Start="0,0"
+              End="54.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="54.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-20.94138671875,5,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.Paths[Lookup Match Output1]"
+          TopLeft="573,442">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39"
+              Start="0,0"
+              End="0,31.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,9.9453125,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.Paths[Lookup Match Output]"
+          TopLeft="570.25,329">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,71"
+              Start="0,0"
+              End="0,63.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,63.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,25.9453125,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load Fact\Typed Raw">
+    design-time-name="Package\Load Fact\FACT_LIQUOR_SALES">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
@@ -5702,7 +5630,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>OverwriteParamsSQLProp</Name>
         <Value
-          type="q2:boolean">false</Value>
+          type="q2:string">false</Value>
       </Property>
       <Property>
         <Name>UsedTableName</Name>
@@ -5712,7 +5640,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>TableInfoObjectType</Name>
         <Value
-          type="q4:int">0</Value>
+          type="q4:string">0</Value>
       </Property>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -5725,7 +5653,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>OverwriteParamsSQLProp</Name>
         <Value
-          type="q2:boolean">false</Value>
+          type="q2:string">false</Value>
       </Property>
       <Property>
         <Name>UsedTableName</Name>
@@ -5735,30 +5663,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>TableInfoObjectType</Name>
         <Value
-          type="q4:int">0</Value>
-      </Property>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\Load Fact\Lookup Product">
-    <Properties>
-      <Property>
-        <Name>OverwriteParamsSQLProp</Name>
-        <Value
-          type="q2:boolean">false</Value>
-      </Property>
-      <Property>
-        <Name>UsedTableName</Name>
-        <Value
-          type="q3:string">[dbo].[DIM_PRODUCT]</Value>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q4:int">0</Value>
+          type="q4:string">0</Value>
       </Property>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -5771,7 +5676,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>OverwriteParamsSQLProp</Name>
         <Value
-          type="q2:boolean">false</Value>
+          type="q2:string">false</Value>
       </Property>
       <Property>
         <Name>UsedTableName</Name>
@@ -5781,7 +5686,7 @@ FROM stg.LiquorSalesRaw;</property>
       <Property>
         <Name>TableInfoObjectType</Name>
         <Value
-          type="q4:int">0</Value>
+          type="q4:string">0</Value>
       </Property>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -5789,7 +5694,114 @@ FROM stg.LiquorSalesRaw;</property>
     </Properties>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
-    design-time-name="Package\Load Fact\FACT_LIQUOR_SALES">
+    design-time-name="Package\Load Fact\Lookup Product">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[DIM_PRODUCT]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact\Typed Raw">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Loop Source Files\Clean and Load Raw">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="156,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\Flat File Source"
+          TopLeft="380,146" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\Derived Column"
+          TopLeft="385,244" />
+        <NodeLayout
+          Size="177.333333333334,42"
+          Id="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination"
+          TopLeft="385,346" />
+        <EdgeLayout
+          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Derived Column Output]"
+          TopLeft="464,286">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="9.5,60"
+              Start="0,0"
+              End="9.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="5.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="5.5,30"
+                    Point2="9.5,30"
+                    Point3="9.5,34" />
+                  <mssgle:LineSegment
+                    End="9.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Loop Source Files\Clean and Load Raw.Paths[Flat File Source Output]"
+          TopLeft="461,188">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Loop Source Files\Clean and Load Raw\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
