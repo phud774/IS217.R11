@@ -1,0 +1,26 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:odc="urn:schemas-microsoft-com:office:odc"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/x-ms-odc; charset=utf-8" />
+<meta name="ProgId" content="ODC.Cube" />
+<meta name="SourceType" content="OLEDB" />
+<meta name="Catalog" content="Iowa Liquor Offline" />
+<meta name="Table" content="Iowa Liquor Offline" />
+<title>Iowa Liquor Offline</title>
+<xml id="docprops">
+  <o:DocumentProperties xmlns:o="urn:schemas-microsoft-com:office:office">
+    <o:Name>Iowa Liquor Offline</o:Name>
+  </o:DocumentProperties>
+</xml>
+<xml id="msodc">
+  <odc:OfficeDataConnection xmlns:odc="urn:schemas-microsoft-com:office:odc">
+    <odc:Connection odc:Type="OLEDB">
+      <odc:ConnectionString>Provider=MSOLAP;Data Source=__CUBE_PATH__;Initial Catalog=Iowa Liquor Offline;Locale Identifier=1033;</odc:ConnectionString>
+      <odc:CommandType>Cube</odc:CommandType>
+      <odc:CommandText>Iowa Liquor Offline</odc:CommandText>
+    </odc:Connection>
+  </odc:OfficeDataConnection>
+</xml>
+</head>
+</html>

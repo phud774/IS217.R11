@@ -1,3 +1,4 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
 SSAS_IowaLiquor_Share/Database/*.bak filter=lfs diff=lfs merge=lfs -text
 SSAS_IowaLiquor_Share/Portable_Data/*.dat filter=lfs diff=lfs merge=lfs -text
+Excel_Offline_Pivot/*.cub filter=lfs diff=lfs merge=lfs -text
