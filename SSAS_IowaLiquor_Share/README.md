@@ -2,6 +2,12 @@
 
 Gói này gồm database nguồn `IowaLiquorDW`, project SSAS Multidimensional và hướng dẫn deploy để dùng Excel PivotTable. Project đã được bỏ tên máy của người tạo; Data Source mặc định trỏ tới `localhost`.
 
+> **Dùng SQL Server/SSAS 2025 Standard Developer?** Nếu Visual Studio báo
+> `The current edition 'StandardDeveloper 64' ... is not supported by the client`,
+> project không bị hỏng. Visual Studio đang nạp thư viện Analysis Services cũ.
+> Làm theo [FIX_SQL2025_CLIENT.md](FIX_SQL2025_CLIENT.md), khởi động lại Visual
+> Studio rồi mới Build/Deploy lại.
+
 ## 1. Máy nhận cần có gì?
 
 - Windows 10/11 64-bit.
