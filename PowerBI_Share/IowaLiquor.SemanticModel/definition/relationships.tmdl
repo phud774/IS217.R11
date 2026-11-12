@@ -1,0 +1,15 @@
+relationship 45dd70b6-a9eb-4ac1-afb6-2de0ca106956
+	fromColumn: FACT_LIQUOR_SALES.date_key
+	toColumn: DIM_DATE.date_key
+
+relationship a935ebc4-2f23-4b88-bdbb-980055d54bf0
+	fromColumn: FACT_LIQUOR_SALES.store_key
+	toColumn: DIM_STORE.store_key
+
+relationship 21f69e07-2b6d-4726-933e-a46609b2c8bb
+	fromColumn: FACT_LIQUOR_SALES.product_key
+	toColumn: DIM_PRODUCT.product_key
+
+relationship e93e48f2-d21b-4b62-9309-b3db113795e0
+	fromColumn: FACT_LIQUOR_SALES.vendor_key
+	toColumn: DIM_VENDOR.vendor_key
