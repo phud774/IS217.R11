@@ -1,7 +1,10 @@
 {
-    "source_fact_rows":  2590975,
-    "county_category_rows":  44843,
-    "vendor_rows":  2013,
-    "store_rows":  23215,
-    "grain":  "Monthly aggregated data for Data Studio dashboards"
+  "source_fact_rows": 2590975,
+  "county_category_rows": 44843,
+  "vendor_rows": 2013,
+  "store_rows": 23215,
+  "quarterly_county_vendor_rows": 25323,
+  "quarterly_county_product_rows": 382708,
+  "monthly_store_category_rows": 438022,
+  "grain": "Monthly or quarterly aggregated data for Power BI report reconstruction"
 }
